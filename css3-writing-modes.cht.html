@@ -1,0 +1,2954 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
+<html lang=en>
+ <head><meta content="text/html; charset=utf-8" http-equiv=Content-Type>
+
+  <title>CSS Writing Modes Module Level 3</title>
+  <link href=default.css rel=stylesheet type="text/css">
+
+  <style type="text/css">
+    object { vertical-align: middle; }
+    .sidebar { float: right; background: #eee; border: solid gray; margin: 1em; }
+    .landscape { height: 10em; }
+    .portrait { width: 10em; }
+    .sidebar .figure { margin: 1em; }
+    .sidebar object { margin: 0 auto; display: block; }
+    .figurepair { display: table; margin: 1em auto; }
+    .figurepair .figure { display: table-cell; }
+     h2, .example { clear: both; }
+    img, object { max-width: 100%; display: block; margin: 1em auto; }
+  </style>
+  <link href="http://www.w3.org/StyleSheets/TR/W3C-ED.css" rel=stylesheet
+  type="text/css">
+
+<body>
+  <div class=head> <!--begin-logo-->
+   <p><a href="http://www.w3.org/"><img alt=W3C height=48
+    src="http://www.w3.org/Icons/w3c_home" width=72></a> <!--end-logo-->
+
+   <h1>CSS書寫模式模組 Level 3</h1>
+
+   <h2 class="no-num no-toc" id=longstatus-date>Editor's Draft 22 March 2011</h2>
+
+   <dl>
+    <dt>This version:
+
+    <dd><a
+     href="http://dev.w3.org/csswg/css3-writing-modes/">http://dev.w3.org/csswg/css3-writing-modes/</a>
+     <!--
+    <dd><a href="http://www.w3.org/TR/2011/WD-css3-writing-modes-20110322">http://www.w3.org/TR/2011/ED-css3-writing-modes-20110322</a>
+-->
+     
+
+    <dt>Latest version:
+
+    <dd><a
+     href="http://www.w3.org/TR/css3-writing-modes/">http://www.w3.org/TR/css3-writing-modes/</a>
+
+    <dt>Previous version:
+
+    <dd><a
+     href="http://www.w3.org/TR/2010/WD-css3-writing-modes-20101202/">http://www.w3.org/TR/2010/WD-css3-writing-modes-20101202/</a>
+
+    <dt>Editors:
+
+    <dd><a href="http://fantasai.inkedblade.net/contact">Elika J. Etemad</a>
+     (Invited Expert)
+
+    <dd><a href="mailto:kojiishi@gluesoft.co.jp">Koji Ishii</a> (<a
+     href="http://www.antenna.co.jp/">Antenna House</a>)
+
+    <dd><a href="mailto:murakami@antenna.co.jp">Shinyu Murakami</a> (<a
+     href="http://www.antenna.co.jp/">Antenna House</a>)
+
+    <dt>Previous Editors:
+
+    <dd><a href="mailto:paulnel@microsoft.com">Paul Nelson</a> (<a
+     href="http://www.microsoft.com/">Microsoft</a>)
+
+    <dd><a href="mailto:michelsu@microsoft.com">Michel Suignard</a> (<a
+     href="http://www.microsoft.com/">Microsoft</a>)
+   </dl>
+   <!--begin-copyright-->
+   <p class=copyright><a
+    href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
+    rel=license>Copyright</a> &copy; 2011 <a
+    href="http://www.w3.org/"><acronym title="World Wide Web
+    Consortium">W3C</acronym></a><sup>&reg;</sup> (<a
+    href="http://www.csail.mit.edu/"><acronym title="Massachusetts Institute
+    of Technology">MIT</acronym></a>, <a href="http://www.ercim.eu/"><acronym
+    title="European Research Consortium for Informatics and
+    Mathematics">ERCIM</acronym></a>, <a
+    href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. W3C <a
+    href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>,
+    <a
+    href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a>
+    and <a
+    href="http://www.w3.org/Consortium/Legal/copyright-documents">document
+    use</a> rules apply.</p>
+   <!--end-copyright-->
+   <hr title="Separator for header">
+  </div>
+
+  <h2 class="no-num no-toc" id=abstract>Abstract</h2>
+
+  <p>CSS3 Writing Modes defines CSS features to support for various
+   international writing modes, such as left-to-right (e.g. Latin or Indic),
+   right-to-left (e.g. Hebrew or Arabic), bidirectional (e.g. mixed Latin and
+   Arabic) and vertical (e.g. Asian scripts).
+   <p>CSS3定義了支援各種國際書寫模式的CSS功能，例如由左到右（例如拉丁美洲或印度語）、由右到左（ 例如希伯來文或阿拉伯文），雙向（例如混合拉丁語和阿拉伯語）和垂直書寫（例如亞洲語系）。
+   <p>Inherently bottom-to-top scripts are not handled in this version. See <a
+   href="#UTN22" rel=biblioentry>[UTN22]<!--{{UTN22}}--></a> for an
+   explanation of relevant issues.
+
+   <p>在這個版本內，並未處理原本由下至上的屬性 。參見<a
+   href="#UTN22" rel=biblioentry>[UTN22]<!--{{UTN22}}--></a>有相關問題的解釋。   
+<h2 class="no-num no-toc" id=status>Status of this document</h2>
+<h2 class="no-num no-toc" id=status>文件狀態</h2>
+ <!--begin-status-->
+
+ <p>This is a public copy of the editors' draft. It is provided for
+   discussion only and may change at any moment. Its publication here does
+   not imply endorsement of its contents by W3C. Don't cite this document
+   other than as work in progress.
+
+  <p>這是一個給編輯者的公開版本草稿，其可供使用者自由討論與更改，但其出版並未意味著W3C對該內容背書，因此當此項工作正在進行的同時請勿引用此未完成之文件。
+ <p>The (<a
+   href="http://lists.w3.org/Archives/Public/www-style/">archived</a>) public
+   mailing list <a
+   href="mailto:www-style@w3.org?Subject=%5Bcss3-writing-modes%5D%20PUT%20SUBJECT%20HERE">
+   www-style@w3.org</a> (see <a
+   href="http://www.w3.org/Mail/Request">instructions</a>) is preferred for
+   discussion of this specification. When sending e-mail, please put the text
+   &#8220;css3-writing-modes&#8221; in the subject, preferably like this:
+   &#8220;[<!---->css3-writing-modes<!---->] <em>&hellip;summary of
+ comment&hellip;</em>&#8221;  
+ <p>此標準以公眾郵件列表
+    <a
+   href="mailto:www-style@w3.org?Subject=%5Bcss3-writing-modes%5D%20PUT%20SUBJECT%20HERE">www-style@w3.org</a>
+ (<a
+   href="http://lists.w3.org/Archives/Public/www-style/">封存檔</a>) 之討論為主，因此在寄送e-mail時，請將&#8220;css3-writing-modes&#8221;放在郵件主題上，比如：&quot;[css3-writing-modes]....意見&quot;。
+<p>This document was produced by the <a href="/Style/CSS/members">CSS
+   Working Group</a> (part of the <a href="/Style/">Style Activity</a>).
+
+ <p>此文件是由 <a href="/Style/CSS/members">CSS
+   Working Group</a>
+ (<a href="/Style/">Style Activity</a>)所制訂產生
+<p>This document was produced by a group operating under the <a
+   href="/Consortium/Patent-Policy-20040205/">5 February 2004 W3C Patent
+   Policy</a>. W3C maintains a <a href="/2004/01/pp-impl/32061/status"
+   rel=disclosure>public list of any patent disclosures</a> made in
+   connection with the deliverables of the group; that page also includes
+   instructions for disclosing a patent. An individual who has actual
+   knowledge of a patent which the individual believes contains <a
+   href="/Consortium/Patent-Policy-20040205/#def-essential">Essential
+   Claim(s)</a> must disclose the information in accordance with <a
+   href="/Consortium/Patent-Policy-20040205/#sec-Disclosure">section 6 of the
+ W3C Patent Policy</a>.</p>
+<p>此文件是在2004年二月5日的W3C專利政策下運行，W3C維護一個<a href="/2004/01/pp-impl/32061/status"
+   rel=disclosure>任何專利公開的公眾列表</a>做為與交付組織間的連結，該頁面亦包含專利公開的說明。若個體擁有該專利之實際知識並包含必要宣稱的資訊，需遵按照<a
+   href="/Consortium/Patent-Policy-20040205/#sec-Disclosure">W3C專利政策第6節的條款</a>實施公開。</p>
+  <!--end-status-->
+
+<h2 class="no-num no-toc" id=Contents>Table of Contents</h2>
+  <!--begin-toc-->
+
+  <ul class=toc>
+   <li><a href="#text-flow"><span class=secno>1. </span>Introduction to
+    Writing Modes</a>
+
+   <li><a href="#text-direction"><span class=secno>2. </span>Inline Direction
+    and Bidirectionality</a>
+    <ul class=toc>
+     <li><a href="#direction"><span class=secno>2.1. </span>Specifying
+      Directionality: the &lsquo;<code class=property>direction</code>&rsquo;
+      property</a>
+
+     <li><a href="#unicode-bidi"><span class=secno>2.2. </span>Embeddings and
+      Overrides: the &lsquo;<code class=property>unicode-bidi</code>&rsquo;
+      property</a>
+
+     <li><a href="#bidi-example"><span class=secno>2.3. </span>Example of
+      Bidirectional Text</a>
+
+     <li><a href="#bidi-box-model"><span class=secno>2.4. </span>Box model
+      for inline elements in bidirectional context</a>
+    </ul>
+
+   <li><a href="#vertical-intro"><span class=secno>3. </span> Introduction to
+    Vertical Text</a>
+    <ul class=toc>
+     <li><a href="#writing-mode"><span class=secno>3.1. </span> Block Flow
+      Direction: the &lsquo;<code class=property>writing-mode</code>&rsquo;
+      property</a>
+    </ul>
+
+   <li><a href="#inline-alignment"><span class=secno>4. </span> Inline-level
+    Alignment</a>
+    <ul class=toc>
+     <li><a href="#intro-baselines"><span class=secno>4.1. </span>
+      Introduction to Baselines</a>
+
+     <li><a href="#text-baselines"><span class=secno>4.2. </span> Text
+      Baselines</a>
+      <ul class=toc>
+       <li><a href="#opentype-baselines"><span class=secno>4.2.1. </span>
+        Baselines in TrueType/OpenType fonts</a>
+      </ul>
+
+     <li><a href="#replaced-baselines"><span class=secno>4.3. </span> Atomic
+      Inline Baselines</a>
+
+     <li><a href="#baseline-alignment"><span class=secno>4.4. </span>
+      Baseline Alignment</a>
+    </ul>
+
+   <li><a href="#intro-text-layout"><span class=secno>5. </span> Introduction
+    to Intrinsic Text Layout</a>
+    <ul class=toc>
+     <li><a href="#text-orientation"><span class=secno>5.1. </span> Orienting
+      Text: the &lsquo;<code class=property>text-orientation</code>&rsquo;
+      property</a>
+    </ul>
+
+   <li><a href="#abstract-box"><span class=secno>6. </span> Abstract Box
+    Terminology</a>
+    <ul class=toc>
+     <li><a href="#abstract-dimensions"><span class=secno>6.1. </span>
+      Logical Dimensions</a>
+
+     <li><a href="#abstract-directions"><span class=secno>6.2. </span>
+      Abstract and Physical Directions</a>
+
+     <li><a href="#line-directions"><span class=secno>6.3. </span>
+      Line-relative Directions</a>
+
+     <li><a href="#logical-directions"><span class=secno>6.4. </span>
+      Flow-relative Directions</a>
+
+     <li><a href="#logical-to-physical"><span class=secno>6.5. </span>
+      Abstract-to-Physical Mappings</a>
+    </ul>
+
+   <li><a href="#abstract-layout"><span class=secno>7. </span> Abstract Box
+    Layout</a>
+    <ul class=toc>
+     <li><a href="#vertical-layout"><span class=secno>7.1. </span> Principles
+      of Layout in Vertical Writing Modes</a>
+
+     <li><a href="#dimension-mapping"><span class=secno>7.2. </span>
+      Dimensional Mapping</a>
+
+     <li><a href="#orthogonal-flows"><span class=secno>7.3. </span>
+      Orthogonal Flows</a>
+      <ul class=toc>
+       <li><a href="#orthogonal-auto"><span class=secno>7.3.1. </span>
+        Auto-sizing in Orthogonal Flows</a>
+
+       <li><a href="#orthogonal-multicol"><span class=secno>7.3.2. </span>
+        Multi-column Layout in Orthogonal Flows</a>
+
+       <li><a href="#orthogonal-pagination"><span class=secno>7.3.3. </span>
+        Paginating Orthogonal Flows</a>
+      </ul>
+
+     <li><a href="#logical-direction-layout"><span class=secno>7.4. </span>
+      Flow-Relative Mappings</a>
+
+     <li><a href="#line-mappings"><span class=secno>7.5. </span>
+      Line-Relative Mappings</a>
+
+     <li><a href="#physical-only"><span class=secno>7.6. </span> Purely
+      Physical Mappings</a>
+
+     <li><a href="#caption-side"><span class=secno>7.7. </span> Table Caption
+      Mappings: the &lsquo;<code class=property>caption-side</code>&rsquo;
+      property</a>
+    </ul>
+
+   <li><a href="#text-combine"><span class=secno>8. </span>Glyph Composition:
+    the &lsquo;<code class=property>text-combine</code>&rsquo; property</a>
+
+   <li class=no-num><a href="#acknowledgements">Acknowledgements</a>
+
+   <li class=no-num><a href="#bidi-html">Appendix B: Bidi Rules for HTML</a>
+
+   <li class=no-num><a href="#script-orientations">Appendix A: Script
+    Orientations</a>
+
+   <li class=no-num><a href="#appendix-b-references">Appendix B:
+    References</a>
+    <ul class=toc>
+     <li class=no-num><a href="#normative-references">Normative
+      references</a>
+
+     <li class=no-num><a href="#other-references">Other references</a>
+    </ul>
+  </ul>
+  <!--end-toc-->
+
+  <h2 id=text-flow><span class=secno>1. </span>Introduction to Writing Modes</h2>
+
+  <p>CSS3 Writing Modes defines CSS features to support for various
+   international writing modes, such as left-to-right (e.g. Latin or Indic),
+   right-to-left (e.g. Hebrew or Arabic), bidirectional (e.g. mixed Latin and
+  Arabic) and vertical (e.g. Asian scripts).  
+  <p>CSS3定義了支援各種國際書寫模式的CSS功能，例如由左到右（例如拉丁美洲或印度語）、由右到左（ 例如希伯來文或阿拉伯文），雙向（例如混合拉丁語和阿拉伯語）和垂直書寫（例如亞洲語系）。<br>
+  <p>A <dfn id=writing-mode0>writing mode</dfn> in CSS is determined by the
+   &lsquo;<a href="#writing-mode1"><code
+   class=property>writing-mode</code></a>&rsquo;, &lsquo;<a
+   href="#direction0"><code class=property>direction</code></a>&rsquo;, and
+   &lsquo;<a href="#text-orientation0"><code
+   class=property>text-orientation</code></a>&rsquo; properties. It is
+   defined primarily in terms of its <a
+   href="#inline-base-direction"><i>inline base direction</i></a> and <a
+   href="#block-flow-direction"><i>block flow direction</i></a>:
+
+  <p>CSS的書寫模式是由&quot;寫作模式&quot;，&quot;方向&quot;，和&quot;文本方向&quot;屬性所組成。它主要定義了<a
+   href="#inline-base-direction"><i>內文方向</i></a>與<a
+   href="#block-flow-direction"><i>段落區塊流動方向</i></a>：   
+<div class=sidebar>
+   <div class="figure right"> <object class=landscape
+    data="diagrams/text-flow-vectors-tb.svg" type="image/svg+xml"></object>
+    <p class=caption>Latin-based writing mode
+   </div>
+
+   <div class="figure left"> <object class=portrait
+    data="diagrams/text-flow-vectors-lr-reverse.svg"
+    type="image/svg+xml"></object>
+    <p class=caption>Mongolian-based writing mode
+   </div>
+
+   <div class="figure right"> <object class=landscape
+    data="diagrams/text-flow-vectors-tb.svg" type="image/svg+xml"></object>
+    <object class=portrait data="diagrams/text-flow-vectors-rl.svg"
+    type="image/svg+xml"></object>
+    <p class=caption>Han-based writing mode
+   </div>
+  </div>
+
+  <p>The <dfn id=inline-base-direction>inline base direction</dfn> is the
+   primary direction in which content is ordered on a line and defines on
+   which sides the "start" and "end" of a line are. The &lsquo;<a
+   href="#direction0"><code class=property>direction</code></a>&rsquo;
+   property specifies the inline base direction of an element and, together
+   with the &lsquo;<a href="#unicode-bidi0"><code
+   class=property>unicode-bidi</code></a>&rsquo; property and the inherent
+   directionality of any text content, determines the ordering of
+   inline-level content within a line.
+
+  <p>內行方向是指一行中內容的主要方向，並定義了一行中哪一邊為&quot;開始&quot;、哪一邊為&quot;結束&quot;。&lsquo;<a
+   href="#direction0"><code class=property>direction</code></a>&rsquo;屬性指定了元件的內文方向，連同&lsquo;<a href="#unicode-bidi0"><code
+   class=property>unicode-bidi</code></a>&rsquo;屬性和任何文字內容的原有方向，決定了一行中行內的順序。
+  <p>The <dfn id=block-flow-direction>block flow direction</dfn> is the
+   direction in which block-level boxes stack and the direction in which line
+   boxes stack within a block container. The &lsquo;<a
+   href="#writing-mode1"><code class=property>writing-mode</code></a>&rsquo;
+   property determines the block flow direction.
+
+  <p>段落區塊流動方向是指區塊與區塊推疊之方向，以及區塊容器中行區塊之方向， &lsquo;<a
+   href="#writing-mode1"><code class=property>writing-mode</code></a>&rsquo;屬性決定山段落區塊流動之方向。
+<p>A <dfn id=horizontal-writing-mode>horizontal writing mode</dfn> is one
+   with horizontal lines of text, i.e. a downward or upward block flow. A
+   <dfn id=vertical-writing-mode>vertical writing mode</dfn> is one with
+   vertical lines of text, i.e. a leftward or rightward block flow.
+
+<p>水平書寫模式是指在水平行上呈現的文字，比如在一個向下流動或向上流動的區塊中呈現。而垂直書寫模式從是指在垂直行上呈現的文字，比如在向左流動或向右流動的區塊中呈現。
+<p class=note>These terms should not be confused with <dfn
+   id=vertical-block-flow>vertical block flow</dfn> (which is a downward or
+   upward block flow) and <dfn id=horizontal-block-flow>horizontal block
+   flow</dfn> (which is leftward or rightward block flow). To avoid
+   confusion, the CSS specifications avoid this latter set of terms.
+
+<p class=note>垂直區塊流動(向上或向下區塊流動)不要與水平區塊流動(向左或向右區塊流動)混淆，為了避免混淆CSS標準避免使用後者的專有名稱。
+<p>Writing systems typically have one or two native writing modes. Some
+   examples are:
+
+<p>書寫系統一般有一或兩種基本的書寫模式，比如：
+<ul>
+   <li>Latin-based systems are typically written using a left-to-right inline
+    direction with a downward (top-to-bottom) block flow direction.
+
+   <li>拉丁語系一般使用由左到右的內行方向與向下(由上到下)區塊流動方向
+   <li>Arabic-based systems are typically written using a right-to-left
+    inline direction with a downward (top-to-bottom) block flow direction.
+
+   <li>阿拉伯語系一般使用由右至左的內行方向與向下區塊流動方向  
+   <li>Mongolian-based systems are typically written using a top-to-bottom
+    inline direction with a rightward (left-to-right) block flow direction.
+
+   <li>蒙古語系一般使用由上至下的內行方向與向右(由左至右)區塊流動方向
+   <li>Han-based systems are commonly written using a left-to-right inline
+    direction with a downward (top-to-bottom) block flow direction,
+    <strong>or</strong> a top-to-bottom inline direction with a leftward
+    (right-to-left) block flow direction. Many magazines and newspapers will
+    mix these two writing modes on the same page.
+   <li>漢語系一般使用由左至右的內行方向與向下(由上至下)區塊流動方向，或是由上至下的內行方向與向左(由右至左)區塊流動方向，多種雜誌與新聞會混用這兩種書寫模式 
+</ul>
+
+  <p class=note>See Unicode Technical Note #22 <a href="#UTN22"
+   rel=biblioentry>[UTN22]<!--{{UTN22}}--></a> (<a
+   href="http://fantasai.inkedblade.net/style/discuss/vertical-text/paper">HTML
+   version</a>) for a more in-depth introduction to writing modes and
+   vertical text.
+
+  <p class=note>更深入的書寫模式與垂直文字介紹請參見技術註解#22  <a href="#UTN22"
+   rel=biblioentry>[UTN22]
+      <!--{{UTN22}}-->
+</a>  
+<p class=issue>Point at Intro to Text Orientation section once it's
+   written.
+
+<h2 id=text-direction><span class=secno>2. </span>Inline Direction and
+   Bidirectionality</h2>
+
+  <p>While the characters in most scripts are written from left to right,
+   certain scripts are written from right to left. In some documents, in
+   particular those written with the Arabic or Hebrew script, and in some
+   mixed-language contexts, text in a single (visually displayed) block may
+   appear with mixed directionality. This phenomenon is called <span
+   class=index-def id=bidirectionality title="bidirectionality (bidi)"><dfn
+   id=bidirectionality0>bidirectionality</dfn></span>, or "bidi" for short.
+
+  <p>大部分文字的書寫方向是由左至右，而某些則是由右至左。在一些文件中，特別是用阿拉伯文或希伯來文，與一些混和式語言的內容，以單欄(呈現)的文字書寫方向往往會是混合的，這個現象稱為雙向性(bidirectionality)。  
+  <div class=figure>
+   <pre><span dir=rtl>با Unicode بنویس.</span>
+<!--  -->&lt;----- ------> &lt;-
+<!--  -->&lt;================</pre>
+
+   <p class=caption>Bidirectionality</p>
+   <p class=caption>雙向性</p>
+</div>
+
+  <p>The Unicode standard (<a
+   href="http://www.unicode.org/reports/tr9/">Unicode Standard Annex #9</a>)
+   defines a complex algorithm for determining the proper ordering of
+   bidirectional text. The algorithm consists of an implicit part based on
+   character properties, as well as explicit controls for embeddings and
+   overrides. CSS relies on this algorithm to achieve proper bidirectional
+   rendering. The <span class=propinst-direction>&lsquo;<a
+   href="#direction0"><code class=property>direction</code></a>&rsquo;</span>
+   and <span class=propinst-unicode-bidi>&lsquo;<a
+   href="#unicode-bidi0"><code
+   class=property>unicode-bidi</code></a>&rsquo;</span> properties allow
+   authors to specify how the elements and attributes of a document language
+   map to this algorithm.
+
+  <p>在 Unicode 標準 (<a href="http://www.unicode.org/reports/tr9/">Unicode Standard Annex #9</a>) 中，定義了一複雜的演算法，來決定雙向文字適合的排序方式。此演算法在文字屬性上，隱含了處理 embed 與 override 的控制。CSS 依尋這個演算法，實現適合的雙向性的文字呈現。 <span class="propinst-direction">‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’</span> 與 <span class="propinst-unicode-bidi">‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#unicode-bidi0"><code class="property">unicode-bidi</code></a>’</span> 屬性允許作者定義文件語言對應圖的元素與屬性。    
+  <p>User agents that support bidirectional text must apply the Unicode
+   bidirectional algorithm to every sequence of inline boxes uninterrupted by
+   a forced (<a
+   href="http://www.unicode.org/reports/tr9/#Bidirectional_Character_Types">bidi
+   class B</a>) paragraph break or block boundary. This sequence forms the
+   <dfn id=paragraph>paragraph</dfn> unit in the bidirectional algorithm.
+
+  <p>使用者使用支援的雙向性文字時，必須使用到 Unicode 雙向性演算法，強制 (<a href="http://www.unicode.org/reports/tr9/#Bidirectional_Character_Types">bidi
+class B</a>) 將每一行文字中，連續的 inline boxes 段落換行或邊界阻擋，以組成段落單元。    
+<p>Except when the &lsquo;<code class=css>plaintext</code>&rsquo; value of
+   &lsquo;<a href="#unicode-bidi0"><code
+   class=property>unicode-bidi</code></a>&rsquo; is in effect, the paragraph
+   embedding level is set according to the value of the &lsquo;<a
+   href="#direction0"><code class=property>direction</code></a>&rsquo;
+   property of the paragraph's element rather than by the heuristic given in
+   steps P2 and P3 of the Unicode algorithm. The paragraph's element is
+   usually the containing block, but in the case of a paragraph contained by
+   bidi <a href="#isolate">isolation</a> it is the isolating inline element
+   instead.
+
+<p>舉一個例外的情況，‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#unicode-bidi0"><code class="property">unicode-bidi</code></a>’ 的 ‘<code class="css">plaintext</code>’ 在這之中是會被影響的，文章段落允許嵌入文章元素的 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ 屬性，比 P2 與 P3 步驟所試探的 Unicode 演算法(？)。段落元素通常包含邊界。但萬一在段落中包含雙向 <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#isolate">isolation</a> 為隔離 inline 元素取代。
+
+<p>Because the base directionality of a text depends on the structure and
+   semantics of the document, the &lsquo;<a href="#direction0"><code
+   class=property>direction</code></a>&rsquo; and &lsquo;<a
+   href="#unicode-bidi0"><code class=property>unicode-bidi</code></a>&rsquo;
+   properties should in most cases be used only to map bidi information in
+   the markup to its corresponding CSS styles. If a document language
+   provides markup features to control bidi, authors and users should use
+   those features and not specify CSS rules to override them.
+
+<p>因為基於文字方向性依賴於文章的結構與語意， ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ 與 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#unicode-bidi0"><code class="property">unicode-bidi</code></a>’ 的屬性在大部分的情況下，必須將雙向性的標註資訊對應在 CSS 樣式。如果一份文件中的語言，提供標註功能來控制雙向性，作者與使用者應該直接使用這些功能，而不要透過 CSS 規則覆寫掉。
+<p>The HTML 4 specification (<a href="#HTML401"
+   rel=biblioentry>[HTML401]<!--{{HTML401}}--></a>, section 8.2) defines
+   bidirectionality behavior for HTML elements. The HTML 4 specification also
+   contains more information on bidirectionality issues.
+
+<p>HTML 4 規格 (<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#HTML401" rel="biblioentry">[HTML401]
+    <!--{{HTML401}}-->
+</a>, section 8.2) 定義了 HTML 元素的雙向性行為。HTML 4 規格也包含更多雙向性的議題資訊。
+
+<p class=note>Because HTML UAs can turn off CSS styling, we advise HTML
+   authors to use the HTML &lsquo;<code class=property>dir</code>&rsquo;
+   attribute and &lt;bdo&gt; element to ensure correct bidirectional layout
+   in the absence of a style sheet.
+
+<p class=note>因為 HTML UAs 可將 CSS 樣式關閉。我們建議 HTML 作者使用 HTML 的 ‘dir’ 屬性與 &lt;bdo&gt; 元素，確保在沒有定義樣式表時，雙向性設計的正確性。
+<h3 id=direction><span class=secno>2.1. </span>Specifying Directionality:
+&lsquo;<a href="#direction0"><code
+   class=property>direction</code></a>&rsquo;property</h3>
+<h3 id="direction2"><span class="secno">2.1. </span>定義方向性:
+  ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ 屬性</h3>
+<table class="propdef">
+  <tbody>
+    <tr>
+      <th>Name: </th>
+      <td><dfn id="direction0">direction</dfn></td>
+    </tr>
+    <tr>
+      <th>Value: </th>
+      <td>ltr | rtl </td>
+    </tr>
+    <tr>
+      <th>Initial: </th>
+      <td>ltr </td>
+    </tr>
+    <tr>
+      <th>Applies to: </th>
+      <td>all elements </td>
+    </tr>
+    <tr>
+      <th>Inherited: </th>
+      <td>yes </td>
+    </tr>
+    <tr>
+      <th>Percentages: </th>
+      <td>N/A </td>
+    </tr>
+    <tr>
+      <th>Media: </th>
+      <td>visual </td>
+    </tr>
+    <tr>
+      <th>Computed&nbsp;value: </th>
+      <td>specified value </td>
+    </tr>
+  </tbody>
+</table>
+<!---->
+<table class="propdef">
+  <tbody>
+    <tr>
+      <th>名稱: </th>
+      <td><dfn id="direction0">direction</dfn></td>
+    </tr>
+    <tr>
+      <th>值: </th>
+      <td>ltr | rtl </td>
+    </tr>
+    <tr>
+      <th>初始值: </th>
+      <td>ltr </td>
+    </tr>
+    <tr>
+      <th>應用於: </th>
+      <td>all elements </td>
+    </tr>
+    <tr>
+      <th>繼承: </th>
+      <td>yes </td>
+    </tr>
+    <tr>
+      <th>百分比: </th>
+      <td>N/A </td>
+    </tr>
+    <tr>
+      <th>媒體: </th>
+      <td>visual </td>
+    </tr>
+    <tr>
+      <th>計算值: </th>
+      <td>specified value </td>
+    </tr>
+  </tbody>
+</table>
+<!---->
+<p>This property specifies the base directionality of text and elements on
+  a line, and the directionality of embeddings and overrides (see ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#unicode-bidi0"><code class="property">unicode-bidi</code></a>’)
+  for the Unicode bidirectional algorithm. In addition, it affects the
+  ordering of <a href="http://www.w3.org/TR/CSS21/tables.html">table</a> column layout, the direction of horizontal <a href="http://www.w3.org/TR/CSS21/visufx.html#overflow">overflow</a>, and
+  the default alignment of text within a line, and other things that depend
+  on the base inline base direction. </p>
+<p> 這個屬性定義了每一行文字與元素的基本雙向性，與 embed 與 override (參考 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#unicode-bidi0"><code class="property">unicode-bidi</code></a>’) 於雙向性 Unicode 演算法中。實際上，這影響了 <a href="http://www.w3.org/TR/CSS21/tables.html">table</a> column設計的排序、水平方向的 <a href="http://www.w3.org/TR/CSS21/visufx.html#overflow">overflow</a> 、每行文字的預設的 alignment、其他 inline 定義方向的東西。 </p>
+<p>Values for this property have the following meanings: </p>
+<p> 這個屬性的值有以下的意義： </p>
+<dl>
+  <dt><strong>ltr</strong> </dt>
+  <dd>Left-to-right directionality. </dd>
+  <dd>由左至右的方向。 </dd>
+  <dt><strong>rtl</strong> </dt>
+  <dd>Right-to-left directionality. </dd>
+  <dd>由右至左的方向 </dd>
+</dl>
+<p class="note">The ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ property has no effect on bidi
+  reordering when specified on inline elements whose ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#unicode-bidi0"><code class="property">unicode-bidi</code></a>’
+  property's value is ‘<code class="css">normal</code>’. </p>
+<p> 在 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#unicode-bidi0"><code class="property">unicode-bidi</code></a>’ 中的
+  ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ 屬性的值設定為標準時，對雙向的重新排序沒有影響。 </p>
+<p>The value of the ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ property on the root element is
+  also propagated to the initial containing block and, together with the
+  ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#writing-mode1"><code class="property">writing-mode</code></a>’ property, determines the
+  document's principal writing mode. (See <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#principal-writing-mode">below</a>.) </p>
+<p> ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ 屬性的值在根元素 (root element) 同時傳遞進行初始化 block 與 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#writing-mode1"><code class="property">writing-mode</code></a>’ 的屬性，判斷文件主要的 writing mode。 (參考<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#principal-writing-mode">以下內容</a>。) </p>
+<p class="note">Note that the ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ property of the HTML BODY
+  element is <em>not</em> propagated to the viewport. That special behavior
+  only applies to the background and overflow properties. </p>
+<p> HTML 中 BODY 元素的 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ 屬性不會傳遞至 viewport。特別行為只會在 background 與 overflow 屬性生效。 </p>
+<p class="note">The ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ property, when specified for
+  table column elements, is not inherited by cells in the column since
+  columns are not the ancestors of the cells in the document tree. Thus, CSS
+  cannot easily capture the "dir" attribute inheritance rules described in <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#HTML401" rel="biblioentry">[HTML401]
+    <!--{{HTML401}}-->
+    </a>,
+  section 11.3.2.1. </p>
+<p> 使用 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ 屬性用來定義 table column 的元素時，並非由 table 元素來繼承，因為 column 的祖先不是 table 元素的文件樹。所以CSS 不能輕易的抓取 “dir” 屬性的繼承規則，詳細資訊於 <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#HTML401" rel="biblioentry">[HTML401]
+  <!--{{HTML401}}-->
+</a> section 11.3.2.1。 </p><h3 id=unicode-bidi><span class=secno>2.2. </span>Embeddings and Overrides:
+&lsquo;<a href="#unicode-bidi0"><code
+   class=property>unicode-bidi</code></a>&rsquo;property</h3>
+
+  <table class=propdef>
+   <tbody>
+    <tr>
+     <th>Name:
+
+     <td><dfn id=unicode-bidi0>unicode-bidi</dfn>
+
+    <tr>
+     <th>Value:
+
+     <td>normal | [ [ embed | isolate ] || [ plaintext | bidi-override ] ]
+
+    <tr>
+     <th>Initial:
+
+     <td>normal
+
+    <tr>
+     <th>Applies to:
+
+     <td>all elements, but see prose
+
+    <tr>
+     <th>Inherited:
+
+     <td>no
+
+    <tr>
+     <th>Percentages:
+
+     <td>N/A
+
+    <tr>
+     <th>Media:
+
+     <td>visual
+
+    <tr>
+     <th>Computed&#160;value:
+
+     <td>specified value
+  </table>
+
+  <p>Values for this property have the following meanings: </p>
+  <table class="propdef">
+    <tbody>
+      <tr>
+        <th><strong>名稱</strong>: </th>
+        <td><dfn id="unicode-bidi2">unicode-bidi</dfn></td>
+      </tr>
+      <tr>
+        <th><strong>數值</strong>: </th>
+        <td>normal | [ [ embed | isolate ] || [ plaintext | bidi-override ] ] </td>
+      </tr>
+      <tr>
+        <th><strong>初始值</strong>: </th>
+        <td>normal </td>
+      </tr>
+      <tr>
+        <th><strong>應用於</strong>: </th>
+        <td>all elements, but see prose </td>
+      </tr>
+      <tr>
+        <th><strong>繼承</strong>: </th>
+        <td>no </td>
+      </tr>
+      <tr>
+        <th><strong>百分比</strong>: </th>
+        <td>N/A </td>
+      </tr>
+      <tr>
+        <th><strong>媒體</strong>: </th>
+        <td>visual </td>
+      </tr>
+      <tr>
+        <th><strong>計算值</strong>: </th>
+        <td>specified value </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>這些屬性的數值有下列意義: </p>
+<p> </p>
+  <dl>
+    <dt><strong>normal</strong> </dt>
+    <dd>The element does not open an additional level of embedding with
+      respect to the bidirectional algorithm. For inline-level elements,
+      implicit reordering works across element boundaries. <br>
+    </dd>
+    <dd>元素不會開啟附加的有關雙向演算法的內嵌式層級。 對於行內層級元素，隱含的重新排序會跨元素邊界進行。 </dd>
+  </dl>
+  <dl>
+    <dt><strong>embed</strong> </dt>
+    <dd>If the element is inline-level, this value opens an additional level
+      of embedding with respect to the bidirectional algorithm. The direction
+      of this embedding level is given by the ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’
+      property. Inside the element, reordering is done implicitly. This
+      corresponds to adding a LRE (U+202A; for ‘<code class="css">direction: ltr</code>’) or RLE (U+202B; for ‘<code class="css">direction: rtl</code>’) at the start of the element and a
+      PDF (U+202C) at the end of the element.<br>
+    </dd>
+    <dd>假如是行內層級元素, 這個數值則開啟了一個額外有關雙向演算法的內嵌式層級。而此內嵌式層級的方向則‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’屬性所產生。在元素內部隱含的完成重新排序。對應於元素開始處增加LRE (對於U+202A; ‘direction: ltr’) 或是 RLE (對於U+202B; ‘direction: rtl’) 並且在元素的最後增加 PDF (U+202C) </dd>
+    <dt>&nbsp;</dt>
+    <dt><strong>bidi-override</strong> </dt>
+    <dd>For inline-level elements this creates an override. For block-level,
+      table-cell, table-caption, or inline-block elements this creates an
+      override for inline-level descendants not within another block-level,
+      table-cell, table-caption, or inline-block element. This means that
+      inside the element, reordering is strictly in sequence according to the <span class="propinst-direction">‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’</span> property; the implicit
+      part of the bidirectional algorithm is ignored. This corresponds to
+      adding a LRO (U+202D; for ‘<code class="css">direction:
+        ltr</code>’) or RLO (U+202E; for ‘<code class="css">direction:
+          rtl</code>’) at the start of the element and a PDF (U+202C) at the
+      end of the element. </dd>
+    <dt>&nbsp;</dt>
+    <dd>行內元素層級造成了覆寫。 而區塊層級,  table-cell, 表格標題, 或是行內層級元素則造成了行內層級後代不在另外的區塊層級,table-cell,表格標題,或是行內區塊元素範圍內的覆寫。這表示在元素中，是根據‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’而嚴密的重新排序，忽略了雙向演算法中隱含的部分。這對應於元素開始處增加LRO (對於U+202D;  ‘direction: ltr’) 或是RLO  (對於U+202E;‘direction:  rtl’) 並且在元素的最後增加PDF (U+202C) </dd>
+    <dt><strong>isolate</strong> </dt>
+    <dd>For the purposes of the Unicode bidirectional algorithm, the contents
+      of the element are considered to be inside a separate, independent
+      paragraph, and for the purpose of bidi resolution in its containing bidi
+      paragraph (if any), the element itself is treated as if it were an Object
+      Replacement Character (U+FFFC). (If the element is broken across multiple
+      lines, then each box of the element is treated as an Object Replacement
+      Character.) </dd>
+    <dd>Unicode雙向演算法的用途, 元素的內容會被視為是單獨、獨立的段落，而雙向resolution所包含的雙向段落的用途(若有的話)，元素本身會被視為是Object Replacement Character (U+FFFC). (假如元素被多行所破壞, 則每一box的元素會被視為是Object Replacement Character.) </dd>
+    <dt><strong>plaintext</strong> </dt>
+    <dd>
+      <p>For the purposes of the Unicode bidirectional algorithm, the base
+        directionality of each "paragraph" for which the element forms the
+        containing block is determined not by the element's computed ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ as
+        usual, but by following rules P2 and P3 of the Unicode bidirectional
+        algorithm. Note this value has no effect on inline elements. </p>
+    </dd>
+    <dd>Unicode雙向演算法的用途對於元素所形成的containing blocks而言，每一”paragraph”的方向性並不全然是由元素的‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ 所決定，但卻是藉由Unicode雙向演算法的規則：P2和P3。需注意這個值對行內元素不會有影響。<br>
+    </dd>
+    <dd>
+      <p> </p>
+    </dd>
+  </dl>
+  <p>The final order of characters within in each bidi paragraph is the same
+    as if the bidi control codes had been added as described above, markup had
+    been stripped, and the resulting character sequence had been passed to an
+    implementation of the Unicode bidirectional algorithm for plain text that
+    produced the same line-breaks as the styled text. If an inline element is
+    broken around a bidi paragraph boundary (e.g. if split by a block or
+    forced paragraph break), then the bidi control codes corresponding to the
+    end of the element are added before the interruption and the codes
+    corresponding to the start of the element are added after it. (In other
+    words, any embedding levels or overrides started by the element are closed
+    at the paragraph break and reopened on the other side of it.) </p>
+  <p>在每個雙向性段落內字元的最終排序和加進了如上所述的雙向性控制代碼是一樣的，標記資訊已經stripped，而最後的字元順序已經以純文字被傳送到Unicode雙向演算法來產生和設計過的文字一樣的line-breaks。如果an inline element is broken around a (?)雙向段落的邊界 (例如被block所分離或是被強迫分段)，則對應於元素結尾的雙向控制代碼會在中斷前和對應於元素開始的代碼加入之前加入(換句話說，任何內嵌層級或覆寫會啟動在元素分段結尾並且從另一端再度開啟) </p>
+  <p> </p>
+  <p>In this process, replaced elements with ‘<code class="css">display:
+    inline</code>’ are treated as neutral characters, unless their
+    ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#unicode-bidi0"><code class="property">unicode-bidi</code></a>’ property has a value other
+    than ‘<code class="property">normal</code>’, in which case they
+    are treated as strong characters in the ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ specified for the element. All
+    other atomic inline-level boxes are treated as neutral characters always. </p>
+  <p>在此過程中，‘display: inline’被替代的元素會被視為neutral characters，除非這些元素的‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#unicode-bidi0"><code class="property">unicode-bidi</code></a>‘屬性有‘normal’之外的數值，in  which case they are treated as strong characters in the ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ specified for  the element.(?) 其他所有atomic行內層級的boxes則會經常被視為neutral  characters. </p>
+  <p>Please note that in order to be able to flow inline boxes in a uniform
+    direction (either entirely left-to-right or entirely right-to-left), more
+    inline boxes (including anonymous inline boxes) may have to be created,
+    and some inline boxes may have to be split up and reordered before
+    flowing. </p>
+  <p>請注意：為了使inline  boxes得以以相同一致的方向編排(完全由左至右或事完全由右至左)，可能需要創造更多的inline boxes(包含不具名的inline  boxes)，而某些inline  boxes在編排之前也許需要先分離和重新排過。 </p>
+  <p>Because the Unicode algorithm has a limit of <em title="According to
+   unicode 3.0, chapter 3, section 12, definition BD2. Specifically, page 58
+   here: http://www.unicode.org/unicode/uni2book/ch03.pdf"> 61 levels</em> of
+    embedding, care should be taken not to use <span class="propinst-unicode-bidi">‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#unicode-bidi0"><code class="property">unicode-bidi</code></a>’</span> with a value other
+    than ‘<code class="property">normal</code>’ unless appropriate.
+    In particular, a value of ‘<code class="property">inherit</code>’ should be used with extreme caution.
+    However, for elements that are, in general, intended to be displayed as
+    blocks, a setting of ‘<code class="css">unicode-bidi:
+      isolate</code>’ is preferred to keep the element together in case
+    display is changed to inline (see example below). </p>
+  <p>由於Unicode演算法有61個層級的內嵌式限制，所以應當很恰當地使用帶有‘normal’之外的數值的<span class="propinst-unicode-bidi">‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#unicode-bidi0"><code class="property">unicode-bidi</code></a>’</span>。尤其是‘inherit’數值在使用上應該更加小心謹慎。然而一般而言對於那些表現為區塊的元素，a setting of ‘unicode-bidi: isolate’ 寧可將元素集中一起以免表現的結果變成inline(參考以下例子) </p>
+  <p>The following example shows an XML document with bidirectional text. It
+    illustrates an important design principle: document language designers
+    should take bidi into account both in the language proper (elements and
+    attributes) and in any accompanying style sheets. The style sheets should
+    be designed so that bidi rules are separate from other style rules, and
+    such rules should not be overridden by other style sheets so that the
+    document language's bidi behavior is preserved. </p>
+<p>下面則是一份雙向文字XML文件的例子。它說明了一點重要的設計要點：文件的語言設計者應當同時考慮到雙向性適當的語言(元素和attribute)以及任何伴隨的樣式表。設計樣式表是為了雙向性規則會和其他樣式規則有所分別，而這些規則更不應該被其它樣式表覆寫，因此才能確保此份文件語言的雙向性行為受保護。 </p><h3 id=bidi-example><span class=secno>2.3. </span>Example of Bidirectional
+</h3>
+
+  <div class=example>
+   <p>In this example, lowercase letters stand for inherently left-to-right
+    characters and uppercase letters represent inherently right-to-left
+    characters. The text stream is shown in logical backing store order.</p>
+   <p>在這個範的裡，小寫字母呈現原本的由左至右字元，而大寫字母呈現由右至右字元。??</p>
+
+   <pre class=xml-example><code class=xml>
+&lt;HEBREW&gt;
+  &lt;PAR&gt;HEBREW1 HEBREW2 english3 HEBREW4 HEBREW5&lt;/PAR&gt;
+  &lt;PAR&gt;HEBREW6 &lt;EMPH&gt;HEBREW7&lt;/EMPH&gt; HEBREW8&lt;/PAR&gt;
+&lt;/HEBREW&gt;
+&lt;ENGLISH&gt;
+  &lt;PAR&gt;english9 english10 english11 HEBREW12 HEBREW13&lt;/PAR&gt;
+  &lt;PAR&gt;english14 english15 english16&lt;/PAR&gt;
+  &lt;PAR&gt;english17 &lt;HE-QUO&gt;HEBREW18 english19 HEBREW20&lt;/HE-QUO&gt;&lt;/PAR&gt;
+&lt;/ENGLISH&gt;
+    </code></pre>
+
+   <p>Since this is arbitrary XML, the style sheet is responsible for setting
+    the writing direction. This is the style sheet:</p>
+   <p>因為這是一份任意排列之XML文件，其書寫方向需由樣式表設定，下列為樣式表內容：</p>
+
+   <pre>
+/* Rules for bidi */
+HEBREW, HE-QUO  {direction: rtl; unicode-bidi: embed;}
+ENGLISH         {direction: ltr; unicode-bidi: embed;} 
+
+/* Rules for presentation */
+HEBREW, ENGLISH, PAR  {display: block;}
+EMPH                  {font-weight: bold;}
+    </pre>
+
+   <p>The HEBREW element is a block with a right-to-left base direction, the
+    ENGLISH element is a block with a left-to-right base direction. The PARs
+    are blocks that inherit the base direction from their parents. Thus, the
+    first two PARs are read starting at the top right, the final three are
+    read starting at the top left. Please note that HEBREW and ENGLISH are
+    chosen as element names for explicitness only; in general, element names
+    should convey structure without reference to language.</p>
+   <p>HEBREW元素是區塊由右至左方向排放，而ENGLISH元素是區塊由左至右方向排放。PARs的區塊方向是繼承其父元素。因此，前兩個PARs是由右上方開始讀前，後三個PARs則是由左上方開始讀。其中HEBREW與ENGLISH的名稱只是為了讓該元素更清楚明瞭，一般來說，元素名稱僅傳達結構而不是語言。</p>
+
+   <p>The EMPH element is inline-level, and since its value for <span
+    class=propinst-unicode-bidi>&lsquo;<a href="#unicode-bidi0"><code
+    class=property>unicode-bidi</code></a>&rsquo;</span> is &lsquo;<code
+    class=property>normal</code>&rsquo; (the initial value), it has no effect
+    on the ordering of the text. The HE-QUO element, on the other hand,
+    creates an embedding.</p>
+   <p>EMPH是inline-level的元素，因此<span
+    class=propinst-unicode-bidi>&lsquo;<a href="#unicode-bidi0"><code
+    class=property>unicode-bidi</code></a>&rsquo;</span>的值是&lsquo;<code
+    class=property>normal</code>&rsquo;( (初始值)，對文字的順序是沒有任何效果的。HE-QUO則是建立一個內嵌的元素。</p>
+
+   <p>The formatting of this text might look like this if the line length is
+    long:</p>
+
+   <pre class=ascii-art>
+               5WERBEH 4WERBEH english3 2WERBEH 1WERBEH
+
+                                8WERBEH <b>7WERBEH</b> 6WERBEH
+
+english9 english10 english11 13WERBEH 12WERBEH
+
+english14 english15 english16
+
+english17 20WERBEH english19 18WERBEH
+    </pre>
+
+   <p>Note that the HE-QUO embedding causes HEBREW18 to be to the right of
+    english19.</p>
+   <p>注意在HE-QUO元素的內嵌造成HEBREW18在english19的右邊。</p>
+
+   <p>If lines have to be broken, it might be more like this:</p>
+   <p>若有斷行發生，它會像這樣：</p>
+
+   <pre class=ascii-art>
+       2WERBEH 1WERBEH
+  -EH 4WERBEH english3
+                 5WERB
+
+   -EH <b>7WERBEH</b> 6WERBEH
+                 8WERB
+
+english9 english10 en-
+glish11 12WERBEH
+13WERBEH
+
+english14 english15
+english16
+
+english17 18WERBEH
+20WERBEH english19
+    </pre>
+
+   <p>Because HEBREW18 must be read before english19, it is on the line above
+    english19. Just breaking the long line from the earlier formatting would
+    not have worked. Note also that the first syllable from english19 might
+    have fit on the previous line, but hyphenation of left-to-right words in
+    a right-to-left context, and vice versa, is usually suppressed to avoid
+    having to display a hyphen in the middle of a line.</p>
+   <p>因為HEBREW18必須在english19之前被讀到，即在english19的上一行。若有一長的行列的刪需斷行，之前的格式就不會運作。??</p>
+  </div>
+  <!-- example -->
+
+  <h3 id=bidi-box-model><span class=secno>2.4. </span>Box model for inline
+   elements in bidirectional context</h3>
+  <!-- CSS2.1 8.6 -->
+
+  <p>For each line box, UAs must take the inline boxes generated for each
+   element and render the margins, borders and padding in visual order (not
+   logical order).
+
+  <p>When the element's &lsquo;<a href="#direction0"><code
+   class=property>direction</code></a>&rsquo; property is &lsquo;<code
+   class=css>ltr</code>&rsquo;, the left-most generated box of the first line
+   box in which the element appears has the left margin, left border and left
+   padding, and the right-most generated box of the last line box in which
+   the element appears has the right padding, right border and right margin.
+
+  <p>When the element's &lsquo;<a href="#direction0"><code
+   class=property>direction</code></a>&rsquo; property is &lsquo;<code
+   class=css>rtl</code>&rsquo;, the right-most generated box of the first
+   line box in which the element appears has the right padding, right border
+   and right margin, and the left-most generated box of the last line box in
+   which the element appears has the left margin, left border and left
+   padding.
+
+  <h2 id=vertical-intro><span class=secno>3. </span> Introduction to Vertical
+   Text</h2>
+
+  <p>In addition to extensions to CSS2.1's support for bidirectional
+   text, this module introduces the rules and properties needed to support
+   vertical text layout in CSS.
+  
+  <p>除了擴展 CSS2.1支援的雙向文本，本單元要介紹垂直文本功能的CSS規則和屬性。</p>
+  <p>Unlike languages that use the Latin script which are primarily laid out
+    horizontally, Asian languages such as Chinese and Japanese can be laid out
+    vertically. The Japanese example below shows the same text laid out
+    horizontally and vertically. In the horizontal case, text is read from
+    left to right, top to bottom. For the vertical case, the text is read top
+    to bottom, right to left. Indentation from the left edge in the
+    left-to-right horizontal case translates to indentation from the top edge
+    in the top-to-bottom vertical case. </p>
+  <p>不同的語言會有不同的編排方式，使用拉丁字母的主要是水平編排，亞洲語言，如漢語和日語，可以使用垂直編排。下面的例子(日本文字編排)顯示了相同的文字水平和垂直方向佈置。在水平編排情況下，內文閱讀從左至右，從上到下。在垂直編排下，內文閱讀是從上到下，由右至左。文字段落縮排從左側邊緣(由左至右水平編排)，轉換成書本頂端開始縮排(由上至下垂直編排)。</p>
+  <div class="figure">
+    <p><img alt="A comparison of horizontal and vertical Japanese shows that
+    although the lines rotate, the characters remain upright. Some glyphs,
+    however change: a period mark shifts from the bottom left of its glyph
+    box to the top right. Running headers, however, may remain laid out
+    horizontally across the top of the page." src="./CSS Writing Modes Module Level 3(工讀生)_files/vert-horiz-comparison.png"></p>
+    <p class="caption">Comparison of vertical and horizontal Japanese: iBunko
+      application (iOS)</p>
+    <p class="caption">以日語比較垂直和水平編排：iBunko的應用程序（iOS）</p>
+  </div>
+  <p class="note">For Chinese and Japanese lines are ordered either right to
+    left, while for Mongolian and Manchu left to right. </p>
+  <p>中文和日語的文字行列編排大多從右到左，然而蒙古語言和滿族語言則是從左到右編排。 </p>
+  <p>The change from horizontal to vertical writing can affect not just the
+    layout, but also the typesetting. For example, the position of a
+    punctuation mark within its spacing box can change from the horizontal to
+    the vertical case, and in some cases alternate glyphs are used. </p>
+  <p>這種從水平到垂直的變化不僅影響文字的編排，其實還有排版問題。例如，一個標點符號的位置從水平到垂直的情況下，其間距框可以改變，在某些情況下替代字元的使用。</p>
+  <p>Vertical text that includes Latin script text or text from other scripts
+    normally displayed horizontally can display that text in a number of ways.
+    For example, Latin words can be rotated sideways, or each letter can be
+    oriented upright: </p>
+  <p>垂直文本中包括拉丁字母的文字或其他字母，通常可以水平的方式顯示數字。例如，拉丁美洲的文字可轉動斜向一邊，或每個字母可以直立：</p>
+  <div class="figure">
+    <p><img alt="A dictionary definition for ヴィルス
+    might write the English word &#39;virus&#39; rotated 90° clockwise, but stack
+    the letters of the initialisms &#39;RNA&#39; and &#39;DNA&#39; upright." src="./CSS Writing Modes Module Level 3(工讀生)_files/vert-latin-layouts.png"></p>
+    <p class="caption">Examples of Latin in vertical Japanese: Daijirin Viewer
+      1.4 (iOS)</p>
+    <p class="caption">拉丁美洲的例子在垂直日文：Daijirin的閱讀器 1.4版本（(iOS)</p>
+  </div>
+  <p>In some special cases such as two-digit numbers in dates, text is fit
+    compactly into a single vertical character box: </p>
+  <p>在某些特殊情況下，如兩個數字的日期，文字適合組成一個單一的垂直字符框：</p>
+  <div class="figure">
+    <p><img alt="An exerpt from MacFan shows several possible vertical layouts
+    for numbers: the two-digit month and day are written as
+    horizontal-in-vertical blocks; the years are written with each character
+    upright; except in the English phrase “for Mac 2011”, where
+    the date is rotated to match the rotated Latin." src="./CSS Writing Modes Module Level 3(工讀生)_files/vert-number-layouts.png"></p>
+    <p class="caption">Mac Fan, December 2010, p.49</p>
+    <p class="caption">蘋果的粉絲，2010年12月，第49頁</p>
+  </div>
+  <p>Layouts often involve a mixture of vertical and horizontal elements: </p>
+  <p>文字排版往往涉及縱向和橫向的混合元素：</p>
+  <div class="figure">
+    <p><img alt="Magazines often mix horizontal and vertical layout; for
+    example, using one orientation for the main article text and a different
+    one for sidebar or illustrative content." src="./CSS Writing Modes Module Level 3(工讀生)_files/vert-horiz-combination.png"></p>
+    <p class="caption">Mixture of vertical and horizontal elements</p>
+    <p class="caption">混合垂直和水平的元素</p>
+  </div>
+  <p>Vertical text layouts also need to handle bidirectional text layout;
+    clockwise-rotated Arabic, for example, is laid out bottom-to-top. </p>
+  <p>垂直文字排版也需要處理雙向文字的編排，例如：順時針旋轉的阿拉伯語，則是制定了文字由下至上的編排方式。</p>
+  <h3 id=writing-mode><span class=secno>3.1. </span> Block Flow Direction:
+ the &lsquo;<a href="#writing-mode1"><code
+   class=property>writing-mode</code></a>&rsquo; property</h3>
+
+  <table class=propdef>
+   <tbody>
+    <tr>
+     <th>Name:
+
+     <td><dfn id=writing-mode1>writing-mode</dfn>
+
+    <tr>
+     <th>Value:
+
+     <td>horizontal-tb | vertical-rl | vertical-lr
+
+    <tr>
+     <th>Initial:
+
+     <td>horizontal-tb
+
+    <tr>
+     <th>Applies to:
+
+     <td>All elements except table row groups, table column groups, table
+      rows, and table columns
+
+    <tr>
+     <th>Inherited:
+
+     <td>yes
+
+    <tr>
+     <th>Percentages:
+
+     <td>N/A
+
+    <tr>
+     <th>Media:
+
+     <td>visual
+
+    <tr>
+     <th>Computed&#160;value:
+
+     <td>specified value
+  </table>
+
+  <p>This property sets the block flow direction. Possible values:
+
+  <table class="propdef">
+    <tbody>
+      <tr>
+        <th>名稱: </th>
+        <td>寫作模式writing-mode</td>
+      </tr>
+      <tr>
+        <th>值: </th>
+        <td>水平-tb |垂直-rl |垂直-lr</td>
+      </tr>
+      <tr>
+        <th>預設值: </th>
+        <td>水平-tb</td>
+      </tr>
+      <tr>
+        <th>適用於: </th>
+        <td>所有元素，除了表格裡的列、行有合併的狀況</td>
+      </tr>
+      <tr>
+        <th>繼承: </th>
+        <td>是</td>
+      </tr>
+      <tr>
+        <th>百分比: </th>
+        <td>N/A </td>
+      </tr>
+      <tr>
+        <th>媒體: </th>
+        <td>視覺</td>
+      </tr>
+      <tr>
+        <th>計算值: </th>
+        <td>指定的值</td>
+      </tr>
+    </tbody>
+  </table>
+<p>  
+  <dl>
+   <dt>horizontal-tb
+
+   <dd>Top-to-bottom block flow. The writing mode is horizontal.
+
+   從上到下，從左到右的橫排書寫形式。   
+   <dt>&nbsp;</dt>
+   <dt>&nbsp;</dt>
+   <dt>vertical-rl
+
+   <dd>Right-to-left block flow. The writing mode is vertical.
+
+   區塊從右到左排列，文字則從上到下的垂直編排。
+   <dt>vertical-lr
+
+   <dd>Left-to-right block flow. The writing mode is vertical.
+雖然是豎排，但區塊則從左到右排列。這主要用於內蒙古使用的<a href="http://zh.wikipedia.org/zh/%E8%92%99%E5%8F%A4%E8%AF%AD%E5%AD%97%E6%AF%8D">蒙古語</a>和<a href="http://zh.wikipedia.org/zh/%E6%BB%A1%E8%AF%AD">滿語</a>左到右的塊流動。
+</dl>
+
+  <p>SVG1.1 <a href="#SVG11" rel=biblioentry>[SVG11]<!--{{!SVG11}}--></a>
+   defines some additional values: &lsquo;<code class=css>lr</code>&rsquo;,
+   &lsquo;<code class=css>lr-tb</code>&rsquo;, &lsquo;<code
+   class=css>rl</code>&rsquo;, &lsquo;<code class=css>rl-tb</code>&rsquo;,
+   &lsquo;<code class=css>tb</code>&rsquo;, and &lsquo;<code
+   class=css>tb-rl</code>&rsquo;. These values are <em>deprecated</em> in any
+   context except SVG1 documents. Implementations that wish to support them
+   in the context of CSS must treat these values as follows:
+
+<p>SVG1.1  <a href="#SVG11" rel=biblioentry>[SVG11]<!--{{!SVG11}}--></a> 定義了一些附加的值：lr&rsquo;, &lsquo;lr-tb&rsquo;, &lsquo;rl&rsquo;, &lsquo;rl-tb&rsquo;, &lsquo;tb&rsquo;, 和&lsquo;tb-rl&rsquo;。這些值可在SVG1文件中使用，但是其他文件就不推薦使用。若要這些值能在CSS文件中被執行，必須遵循下列方式：    
+<table class=data>
+   <thead>
+    <tr>
+     <th>SVG1
+
+     <th>CSS
+
+   <tbody>
+    <tr>
+     <td>lr
+
+     <td rowspan=3>horizontal-tb
+
+    <tr>
+     <td>lr-tb
+
+    <tr>
+     <td>rl
+
+    <tr>
+     <td>tb
+
+     <td rowspan=2>vertical-rl
+
+    <tr>
+     <td>tb-rl
+  </table>
+
+  <p class=note>In SVG1.1, these values set the <dfn
+   id=inline-progression-direction>inline progression direction</dfn>, in
+   other words, the direction the current text position advances each time a
+   glyph is added. This is a geometric process that happens <a
+   href="#after"><em>after</em></a> bidi reordering, and thus has no effect
+   on the interpretation of the &lsquo;<a href="#direction0"><code
+   class=property>direction</code></a>&rsquo; property (which is independent
+   of &lsquo;<a href="#writing-mode1"><code
+   class=property>writing-mode</code></a>&rsquo;). (See <a
+   href="http://www.w3.org/TR/SVG/text.html#RelationshipWithBiDirectionality">Relationship
+   with bidirectionality</a>. <a href="#SVG11"
+   rel=biblioentry>[SVG11]<!--{{!SVG11}}--></a>) There are varying
+   interpretations on whether this process causes "writing-mode: rl" to
+   merely shift the text string or reverse the order of all glyphs in the
+   text.
+
+  <p class=note>在SVG1.1，這些值設置內嵌發展方向，換句話說，當前文本位置方向的進步，每次增加一個字型。這是一個幾何過程發生後，比迪重新排序，從而有沒有影響的詮釋了'方向'屬性（這是獨立的寫作模式'）。 （見關係雙向性。[SVG11]）有不同的解釋這個過程中是否會導致&ldquo;寫作模式：rl&rdquo;的只是將文本字符串或反向的順序在文本中的所有字形。    
+  <p class=issue>See <a href=test-writing-mode-direction.svg>this demo</a> to
+   check out your implementation's interpretation! (Note that most SVG
+   implementations don't support the &lsquo;<a href="#direction0"><code
+   class=property>direction</code></a>&rsquo; property, and thus your results
+   may be skewed on that account. Examine the red line of text: if the
+   numbers are not in reverse order, your implementation doesn't support
+   "direction: rtl".)
+
+  <p class=issue>看到這個演示，看看你的實現的詮釋！ （請注意，大多數的SVG實現不支持'方向'屬性，因此您的結果可能是該帳戶上傾斜。檢查紅線文字：如果數字是不是在相反的順序，您的實現不支持&ldquo;方向：勞動教養&ldquo;。）    
+<p>The &lsquo;<a href="#writing-mode1"><code
+   class=property>writing-mode</code></a>&rsquo; property determines the
+   direction of block flow. This determines the progression of block-level
+   boxes in a block formatting context; the progression of line boxes in a
+   block container that contains inlines; and the progression of rows in a
+   table. By virtue of determining the stacking direction of line boxes, the
+   &lsquo;<a href="#writing-mode1"><code
+   class=property>writing-mode</code></a>&rsquo; property also determines
+   whether line boxes and thus the writing mode is horizontal or vertical.
+
+<p>在'書寫模式'屬性決定塊流動的方向。這就決定了發展的塊級框在一個塊格式的範圍內;線箱的進展塊中包含內聯容器，以及發展一個表中的行。憑藉確定堆疊方向線箱，寫作模式'屬性也決定是否行盒，從而寫作模式是水平或垂直。
+<p>When set on the root element, the &lsquo;<a href="#writing-mode1"><code
+   class=property>writing-mode</code></a>&rsquo; property together with the
+   &lsquo;<a href="#direction0"><code
+   class=property>direction</code></a>&rsquo; property determines the <dfn
+   id=principal-writing-mode>principal writing mode</dfn> of the document.
+   This writing mode is used, for example, to determine the default page
+   progression direction. (See <a href="#CSS3PAGE"
+   rel=biblioentry>[CSS3PAGE]<!--{{CSS3PAGE}}--></a>.) The &lsquo;<a
+   href="#writing-mode1"><code class=property>writing-mode</code></a>&rsquo;
+   value of the root element is also propagated to the initial containing
+   block and sets the block flow direction of the initial block formatting
+   context.
+
+<p>當設置在根元素，寫作模式'屬性加上'方向'屬性決定的主要寫作模式的文件。這種寫作方式時，例如，確定發展方向的默認頁。 （見 [CSS3PAGE]。）的寫作模式的價值的根元素也傳播到初始包含塊，並設置塊流方向的初始塊格式化的內容。
+<p class=note>Note that the &lsquo;<a href="#writing-mode1"><code
+   class=property>writing-mode</code></a>&rsquo; property of the HTML BODY
+   element is <em>not</em> propagated to the viewport. That special behavior
+   only applies to the background and overflow properties.
+
+<p class=note>請注意，寫作模式'屬性的HTML BODY元素是不會傳播到口。這僅適用於特殊行為的背景和溢出屬性。
+<p>If an element has a different block flow direction than its containing
+   block:
+
+<p>如果元素具有不同的流動方向塊比其包含塊：
+<ul>
+   <li>If the element has a specified &lsquo;<code
+    class=property>display</code>&rsquo; of &lsquo;<code
+    class=css>inline</code>&rsquo;, its &lsquo;<code
+    class=property>display</code>&rsquo; computes to &lsquo;<code
+    class=property>inline-block</code>&rsquo;. <a href="#CSS21"
+    rel=biblioentry>[CSS21]<!--{{!CSS21}}--></a>
+
+   <li>如果該元素具有指定的'顯示'的'聯'，其'顯示'計算到'內聯塊'。       <a href="#CSS21"
+    rel=biblioentry>[CSS21]</a>   
+   <li>If the element has a specified &lsquo;<code
+    class=property>display</code>&rsquo; of &lsquo;<code
+    class=css>run-in</code>&rsquo;, its &lsquo;<code
+    class=property>display</code>&rsquo; computes to &lsquo;<code
+    class=property>block</code>&rsquo;. <a href="#CSS21"
+    rel=biblioentry>[CSS21]<!--{{!CSS21}}--></a>
+   <li>如果該元素具有指定的'顯示'的'磨合'，其'顯示'計算到'塊'。       <a href="#CSS21"
+    rel=biblioentry>[CSS21]
+       <!--{{!CSS21}}-->
+   </a>
+  </ul>
+
+  <p>If such an element is a block container, then it establishes a new block
+   formatting context.
+
+  <p>如果這樣的元素是塊容器，然後它建立了一個新的塊格式化的內容。    
+<p>The content of replaced elements do not rotate due to the writing mode:
+   images, for example, remain upright. However replaced content involving
+   text (such as MathML content or form elements) should match the replaced
+   element's writing mode and line orientation if the UA supports such a
+   vertical writing mode for the replaced content.
+
+<p>替換元素的內容，由於不旋轉的寫作模式：圖像，例如，保持直立。然而更換內容涉及文字（如MathML的內容或形式元素）應該被替換的元素相匹配的寫作模式，走線如果UA支持這樣的垂直書寫模式更換內容。
+<div class=example>
+   <p>In the following example, two blocks elements (1 and 3) separated by an
+    image (2) are presented in various flow writing modes.</p>
+   <p>在下面的例子，2個（1文字區塊和3文字區塊）被圖像(2)分離的區塊元素，以不同的寫作模式呈現。</p>
+
+   <p>Here is a diagram of horizontal writing mode (<code>writing-mode:
+  horizontal-tb</code>):</p>
+   <p>這裡是一個橫向書寫模式的例子（(writing-mode:  horizontal-tb）：</p>
+
+ <p><img alt="Diagram of horizontal layout: blocks 1, 2, and 3 are stacked
+    top-to-bottom" height=300 src=horizontal.png width=219></p>
+
+   <p>Here is a diagram for the right-to-left vertical writing mode commonly
+    used in East Asia (<code>writing-mode: vertical-rl</code>):</p>
+   <p>這是常用於東亞，一個由右至左垂直書寫模式的例子（writing-mode: vertical-rl）：</p>
+
+ <p><img alt="Diagram of a right-to-left vertical layout: blocks 1, 2, and
+    3 are arranged side by side from right to left" height=191
+    src=vertical-rl.png width=297></p>
+
+   <p>And finally, here is a diagram for the left-to-right vertical writing
+    mode used for Manchu and Mongolian (<code>writing-mode:
+    vertical-lr</code>):</p>
+   <p>最後，這是一個用於滿族、蒙古族，由左到右垂直書寫模式的例子（writing-mode: vertical-lr）：</p>
+
+   <p><img alt="Diagram of left-to-right vertical layout: blocks 1, 2, and 3
+    are arranged side by side from left to right" height=191
+    src=vertical-lr.png width=300></p>
+  </div>
+
+  <h2 id=inline-alignment><span class=secno>4. </span> Inline-level Alignment</h2>
+
+  <p>When different kinds of inline-level content are placed together on a
+   line, the baselines of the content and the settings of the &lsquo;<code
+   class=property>vertical-align</code>&rsquo; property control how they are
+   aligned in the transverse direction of the line box. This section
+   discusses what baselines are, how to find them, and how they are used
+   together with the &lsquo;<code class=property>vertical-align</code>&rsquo;
+   property to determine the alignment of inline-level content.
+
+  <h3 id=intro-baselines><span class=secno>4.1. </span> Introduction to
+   Baselines</h3>
+
+  <p><em>This section is non-normative.</em>
+
+  <p><em>這個章節並不具有規範性。</em>    
+  <p>A <dfn id="baseline">baseline</dfn> is a line along the <i>inline axis</i> of a line box along which individual glyphs of text are aligned. Baselines
+   guide the design of glyphs in a font (for example, the bottom of most
+   alphabetic glyphs typically align with the alphabetic baseline), and they
+   guide the alignment of glyphs from different fonts or font sizes when
+   typesetting.
+  <p><dfn id="baseline">基準線</dfn>是一條延著以個別圖像文字來做對齊的線框的inline軸的線。基準線引領著字體中圖像文字的設計(例如：大多數的alphabetic圖像文字的底邊通常以alphabetic基準線來對齊)，並且在排版時它們引導著不同字形或不同大小下的圖像文字來做對齊。 </p>
+   <div class="figure"> [Picture of alphabetic text in two font sizes with the
+     baseline and emboxes indicated.]</div>
+   <div class="figure"> [圖片中表示兩種字體大小的字母文字的基準線以及 emboxes。]</div>
+   <p>Different writing systems prefer different baseline tables. </p>
+   <p>不同的書寫系統會偏好使用不同的基準線表。 </p>
+   <div class="figure">
+     <p><img alt="Latin prefers the alphabetic baseline, on top of which most
+    letters rest, though some have descenders that dangle below it. Indic
+    scripts are sometimes typeset with a hanging baseline, since their glyph
+    shapes appear to be hanging from a horizontal line. Han-based systems,
+    whose glyphs are designed to fill a square, tend to align on their
+    bottoms." src="./CSS Writing Modes Module Level 3(工讀生)_files/script-preferred-baselines.gif"></p>
+     <p class="caption">Preferred baselines in various writing systems</p>
+     <p class="caption">各個不同的書寫系統所偏好使用的基準線</p>
+   </div>
+   <p>A well-constructed font contains a <dfn id="baseline-table">baseline
+     table</dfn>, which indicates the position of one or more baselines within
+     the font's design coordinate space. (The design coordinate space is scaled
+     with the font size.) </p>
+   <p>一個建構良好的字體會包含著一個<dfn id="baseline-table">基準線表</dfn>，它用來表示一個或多個基準線在字體設計中座標空間下的定位。(設計座標空間是用字體大小來做比例調整。) </p>
+   <div class="figure">
+     <p><img alt="" src="./CSS Writing Modes Module Level 3(工讀生)_files/baselines.gif"></p>
+     <p class="caption">In a well-designed mixed-script font, the glyphs are
+       positioned in the coordinate space to harmonize with one another when
+       typeset together. The baseline table is then constructed to match the
+       shape of the glyphs, each baseline positioned to match the glyphs from
+       its preferred scripts.</p>
+     <p class="caption">在一個精心設計的混合式腳本字體中，圖像文字被定位在座標空間中，好讓共同排版時文字間能夠互相協調。基準線表是當時建構來對應圖像文字的外型，每個基準線都是定位來對應它所偏好的腳本中的圖像文字。 </p>
+   </div>
+   <p>The baseline table is a property of the font, and the positions of the
+     various baselines apply to all glyphs in the font. </p>
+   <p>基準線表是字體中的一個屬性，並且各個不同基準線的定位都適用於字體中全部的圖像文字。 </p>
+   <p>Different baseline tables can be provided for alignment in horizontal
+     and vertical text. </p>
+   <p>不同的基準線表可以提供水平和垂直對齊文字的方式。 </p>
+   <h3 id="text-baselines"><span class="secno">4.2. </span> Text Baselines</h3>
+   <h3 id="text-baselines"><span class="secno">4.2. </span> 文本的基準線</h3>
+   <p>In this specification, only the following baselines are considered: </p>
+   <p>在這段闡述中，只有考慮到下列的基準線： </p>
+   <dl>
+     <dt>alphabetic </dt>
+     <dd>The <dfn id="alphabetic-baseline">alphabetic baseline</dfn>, which
+       typically aligns with the bottom of uppercase Latin glyphs. In horizontal
+       typographic mode, this is the dominant baseline. </dd>
+     <dd><dfn id="alphabetic-baseline">alphabetic 基準線</dfn>，通常以大寫的拉丁圖像文字的底邊來做對齊。在水平印刷模式中，這是主要的基準線。 </dd>
+     <dt>central </dt>
+     <dd>The <dfn id="central-baseline">central baseline</dfn>, which typically
+       crosses the center of the em box. In vertical typographic mode, this is
+       the dominant baseline. If the font is missing this baseline, it is
+       assumed to be halfway between the ascender (<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#over"><i>over</i></a>) and descender (<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#under"><i>under</i></a>) edges of the em box. </dd>
+     <dd><dfn id="central-baseline">central 基準線</dfn>，通常與 embox 的中心相交。在垂直印刷模式中，這是主要的基準線。如果某個字體缺少了這條基準線，則它被假設是在 embox 中 ascender (以上) 邊界和 descender (以下) 邊界的中央位置。 </dd>
+   </dl>
+   <p class="note">A future CSS module will deal with baselines in more detail
+     and allow the choice of other dominant baselines and alignment options. </p>
+   <p class="note">未來的CSS模組將會更細部地處理基準線，並且允許選擇其他的主要基準線和對齊方式。 </p>
+   <h4 id="opentype-baselines"><span class="secno">4.2.1. </span> Baselines in
+     TrueType/OpenType fonts</h4>
+   <h4 id="opentype-baselines"><span class="secno">4.2.1. </span> TrueType/OpenType 字體中的基準線</h4>
+   <p><em>This section is non-normative.</em> </p>
+   <p><em>這個章節並不具有規範性</em> </p>
+   <p>The alphabetic baseline is listed as the <var>romn</var> baseline in
+     TrueType/OpenType baseline tables. If missing, it can sometimes be
+     computed from the ascender and descender metrics. If it cannot be computed
+     from other metrics, it may be assumed to correspond to the zero
+     coordinate. </p>
+   <p>alphabetic 基準線在 TrueType/OpenType 基準線表中被列為 <var>romn</var> 基準線。如果缺少它的話，有時候它可以從 ascender 指標和 descender 指標來計算產生得到。如果它不能從其他指標來計算產生得到的話，則它可能會被假設是和零坐標一致的。 </p>
+   <p>For the ascender and descender metrics, it is recommended to use the <var>sTypoAscender</var> and <var>sTypoDescender</var> metrics from the
+     font's OS/2 table. These should match the <var>idtp</var> and <var>ideo</var> baselines (respectively), which, if present, may be used
+     instead. In the absence of these metrics, the <var>Ascent</var> and <var>Descent</var> metrics from the HHEA/VHEA table should be used. The
+     Win metrics can be used as a fallback; however these are intended as
+     clipping bounds and are not always appropriate for use as em box
+     measurements. </p>
+   <p>對於 ascender 指標和 descender 指標而言，一般都是建議使用 OS/2 字體表中的 <var>sTypoAscender</var> 指標和 <var>sTypoDescender</var> 指標。這些指標應該都會各自地符合 <var>idtp</var> 和 <var>ideo</var> 的基準線，因此如果它們有存在的話，應該使用它們來取代原先的指標。在缺少這些指標時，應該使用HHEA/VHEA表中的 <var>Ascent</var> 指標和 <var>Descent</var> 指標。Win的指標則可以用來當作備用品，然而這些指標都是預期來當作分割用的邊界，而不完全適合用來當作 embox 的度量。 </p>
+   <h3 id="replaced-baselines"><span class="secno">4.3. </span> Atomic Inline
+     Baselines</h3>
+   <h3 id="replaced-baselines"><span class="secno">4.3. </span> Atomic Inline的基準線</h3>
+   <p>If an <a href="http://www.w3.org/TR/CSS21/visuren.html#inline-boxes">atomic
+     inline</a> (such as an inline-block, inline-table, or replaced inline
+     element) is not capable of providing its own baseline information, then
+     the UA synthesizes a baseline table thus: </p>
+   <p>如果一個 <a href="http://www.w3.org/TR/CSS21/visuren.html#inline-boxes">atomic inline</a> (如inline-block、inline-table或者是置換式的inline元素)並沒有能力提供它自己的基準線資訊，那麼由UA所合成的基準線表就會像這樣： </p>
+   <dl>
+     <dt>alphabetic </dt>
+     <dd>The alphabetic baseline is assumed to be at the <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#under"><i>under</i></a> margin edge. </dd>
+     <dd>基準線是假設在<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#under"><i>下</i></a>緣邊框。 </dd>
+     <dt>central </dt>
+     <dd>The central baseline is assumed to be halfway between the <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#under"><i>under</i></a> and <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#over"><i>over</i></a> margin
+       edges of the box. </dd>
+     <dd>基準線是假設在線框中<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#under"><i>下</i></a>緣邊框和<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#over"><i>上</i></a>緣邊框的中間位置。 </dd>
+   </dl>
+<h3 id=baseline-alignment><span class=secno>4.4. </span> Baseline Alignment</h3>
+
+  <p>The dominant baseline is used in CSS for alignment in two cases:
+
+  <ul>
+   <li>Aligning glyphs from different fonts within the same inline box. The
+    glyphs are aligned by matching up the positions of the dominant baseline.
+    
+
+   <li>Aligning a child inline within its parent. The child is aligned to the
+    parent by matching the parent's dominant baseline to the same baseline in
+    the child. (E.g. if the parent's dominant baseline is alphabetic, then
+    the child's alphabetic baseline is matched to the parent's alphabetic
+    baseline, even if the child's dominant baseline is something else.)
+    <div class=example>
+     <p>Given following sample markup:
+
+     <pre>&lt;p&gt;&lt;span class="outer"&gt;Ap &lt;span class="inner"&gt;<i>ji</i>&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</pre>
+
+     <p>And the following style rule:
+
+     <pre>span.inner { font-size: .75em; }</pre>
+
+     <p>The baseline tables of the parent (<code>.outer</code>) and the child
+      (<code>.inner</code>) will not mach up due to the font size difference.
+      Since the dominant baseline is the alphabetic baseline, the child box
+      is aligned to its parent by matching up their alphabetic baselines.
+
+     <div class=figure>
+      <p><img alt="" src=baseline-align-sizes.gif>
+     </div>
+    </div>
+
+    <p>Basline alignment in this fashion is used with the following values of
+     &lsquo;<code class=property>vertical-align</code>&rsquo;: &lsquo;<a
+     href="#baseline"><code class=css>baseline</code></a>&rsquo;,
+     &lsquo;<code class=css>sub</code>&rsquo;, &lsquo;<code
+     class=css>super</code>&rsquo;, &lt;length&gt;, &lt;percentage&gt;. In
+     the latter cases, the baselines are aligned as for &lsquo;<a
+     href="#baseline"><code class=css>baseline</code></a>&rsquo;, but the
+     child is shifted according to the offset given by its &lsquo;<code
+     class=property>vertical-align</code>&rsquo; value.
+
+    <div class=example>
+     <p>If we assign &lsquo;<code class=css>vertical-align:
+      super</code>&rsquo; to the <code>.inner</code> element from the example
+      above, the same rules are used to align the <code>.inner</code> child
+      to its parent; the only difference is in addition to the baseline
+      alignment, the child is shifted to the superscipt position.
+
+     <pre>span.inner { vertical-align: super; font-size: .75em; }</pre>
+
+     <div class=figure>
+      <p><img alt="In this example, the resulting alignment is equivalent to
+       shifting the parent baseline table upwards by the superscript offset,
+       and then aligning the child's alphabetic baseline to the shifted
+       position of the parent's alphabetic baseline."
+       src=baseline-align-super.gif>
+     </div>
+    </div>
+  </ul>
+
+  <h2 id=intro-text-layout><span class=secno>5. </span> Introduction to
+   Intrinsic Text Layout</h2>
+
+  <p>Each writing system has one or more native orientations. Modern scripts
+   can therefore be classified into three orientational categories:
+
+  <p>每一個書寫系統有一或兩種基本的方向。現在書寫腳本因此可被分為三種方向的類別：
+<dl>
+   <dt>horizontal-only
+
+   <dd>Scripts that have horizontal, but not vertical, native orientation.
+    Includes: Latin, Arabic, Hebrew, Devanagari   
+	 <dd>腳本中僅有水平，沒有垂直和原有的方向。包括：拉丁語、阿拉伯語、希伯來語、
+   梵文
+	 <dt>vertical-only
+
+   <dd>Scripts that have vertical, but not horizontal, native orientation.
+    Includes: Mongolian, Manchu
+   <dd>腳本中僅有垂直，沒有垂直和原有的方向。包括：蒙古文、滿州語
+
+   <dt>bi-orientational
+
+   <dd>Scripts that have both vertical and horizontal native orientation.
+    Includes: Han, Hangul, Japanese Kana
+   <dd>腳本中原本就有垂直和水平方向，包括：漢語、朝鮮文、日文
+</dl>
+
+  <p>In modern typographic systems, all glyphs are assigned a horizontal
+   orientation, which is used when laying out text horizontally. To lay out
+   vertical text, the UA needs to transform the text from its horizontal
+   orientation. This transformation is the <dfn
+   id=bi-orientational-transform>bi-orientational transform</dfn>, and there
+   are two types:
+
+  <p>現代的排版系統，所有的字型被指定為水平方向，即使用水平文字排版。
+<dl>
+   <dt>rotate
+
+   <dd>Rotate the glyph from horizontal to vertical <object class=figure
+    data="diagrams/glyph-right.svg" height=80 type="image/svg+xml"
+    width=110></object>
+
+   <dt>translate
+
+   <dd>Translate the glyph from horizontal to vertical <object class=figure
+    data="diagrams/glyph-upright.svg" height=110 type="image/svg+xml"
+    width=80></object>
+  </dl>
+
+  <p>Scripts with a native vertical orientation have an intrinsic
+   bi-orientational transform, which orients them correctly in vertical text:
+   CJK (Chinese/Japanese/Korean) characters translate, that is, they are
+   always upright. Other scripts, such as Mongolian, rotate. (See <a
+   href="#script-orientations">Appendix A</a> for a list of intrinsic
+   bi-orientational transforms.)
+
+  <p>Scripts without a native vertical orientation can be either rotated (set
+   sideways) or translated (set upright): the transform used is a stylistic
+   preference depending on the text's usage, rather than a matter of
+   correctness. The &lsquo;<a href="#text-orientation0"><code
+   class=property>text-orientation</code></a>&rsquo; property's &lsquo;<a
+   href="#vertical-right"><code class=css>vertical-right</code></a>&rsquo;
+   and &lsquo;<a href="#upright"><code class=css>upright</code></a>&rsquo;
+   values are provided to specify rotation vs. translation of horizontal-only
+   text.
+
+  <p class=note>The &lsquo;<a href="#rotate-left"><code
+   class=css>rotate-left</code></a>&rsquo;, &lsquo;<a
+   href="#rotate-right"><code class=css>rotate-right</code></a>&rsquo;, and
+   &lsquo;<a href="#rotate-normal"><code
+   class=css>rotate-normal</code></a>&rsquo; values of &lsquo;<a
+   href="#text-orientation0"><code
+   class=property>text-orientation</code></a>&rsquo; are provided for
+   decorative layout effects and to work around limitations in CSS support
+   for bottom-to-top scripts.
+
+  <p class=issue>Ideally, punctuation should be either sideways or upright
+   depending on whether the primary script is horizontal-only or vertical.
+   However, this information (which, like the base directionality, is a
+   property of the content) is not available to us. (UTN 22 used the concept
+   of a vertical directionality, given via &lsquo;<a href="#direction0"><code
+   class=property>direction</code></a>&rsquo; or the HTML <code>dir</code>
+   attribute to handle this issue.) The current spec works around this by
+   using the East Asian Width property; but this approach only works if
+   vertical scripts do not share punctuation with horizontal-only scripts.
+
+  <h3 id=text-orientation><span class=secno>5.1. </span> Orienting Text: the
+   &lsquo;<a href="#text-orientation0"><code
+   class=property>text-orientation</code></a>&rsquo; property</h3>
+
+  <table class=propdef>
+   <tbody>
+    <tr>
+     <th>Name:
+
+     <td><dfn id=text-orientation0>text-orientation</dfn>
+
+    <tr>
+     <th>Value:
+
+     <td>vertical-right | upright | rotate-right | rotate-left |
+      rotate-normal | auto
+
+    <tr>
+     <th>Initial:
+
+     <td>vertical-right
+
+    <tr>
+     <th>Applies to:
+
+     <td>all elements except table row groups, rows, column groups, and
+      columns
+
+    <tr>
+     <th>Inherited:
+
+     <td>yes
+
+    <tr>
+     <th>Percentages:
+
+     <td>N/A
+
+    <tr>
+     <th>Media:
+
+     <td>visual
+
+    <tr>
+     <th>Computed&#160;value:
+
+     <td>specified value
+  </table>
+
+  <p>This property specifies the orientation of characters within a line and
+   sets the orientation of the line. Current values only have an effect in
+   vertical writing modes. Values have the following meanings:
+
+  <dl>
+   <dt><dfn id=vertical-right>vertical-right</dfn>
+
+   <dd>
+    <p>In vertical writing modes, grapheme clusters from horizontal-only
+     scripts are set sideways, i.e. 90&deg; clockwise from their standard
+     orientation in horizontal text. Characters from vertical scripts are set
+     with their intrinsic orientation.
+
+    <p>In vertical writing modes, this value puts the element in a
+     <i>vertical typographic mode</i> and is typical for layout of primarily
+     vertical-script text.
+
+   <dt><dfn id=upright>upright</dfn>
+
+   <dd>
+    <p>In vertical writing modes, grapheme clusters from horizonal-only
+     scripts are rendered upright, i.e. in their standard horizontal
+     orientation. Shaping characters from such scripts are shaped in their
+     isolated forms. Characters from vertical scripts are set with their
+     intrinsic orientation and shaped normally. When available, vertical
+     glyph variants and vertical font metrics are used to set the text. The
+     UA must synthesize vertical font metrics for grapheme clusters that do
+     not have any.
+
+    <p>For the purposes of bidi reordering, this value causes all characters
+     to be treated as strong LTR. This value causes the used value of
+     &lsquo;<a href="#direction0"><code
+     class=property>direction</code></a>&rsquo; to be &lsquo;<code
+     class=css>ltr</code>&rsquo;.
+
+    <p>In vertical writing modes, this value puts the element in a
+     <i>vertical typographic mode</i>.
+
+   <dt><dfn id=rotate-right>rotate-right</dfn>
+
+   <dd>
+    <p>In vertical writing modes, this causes text to be set as if in a
+     horizontal layout (using horizontal glyph variants and metrics), but
+     rotated 90&deg; clockwise. This value puts the element in a
+     <i>horizontal typographic mode</i>.
+
+   <dt><dfn id=rotate-left>rotate-left</dfn>
+
+   <dd>
+    <p>In vertical writing modes, this causes text to be set as if in a
+     horizontal layout (using horizontal glyph variants and metrics), but
+     rotated 90&deg; counter-clockwise. This value puts the element in a
+     <i>horizontal typographic mode</i>.
+
+    <p>If set on a non-replaced inline whose parent is not &lsquo;<a
+     href="#rotate-left"><code class=css>rotate-left</code></a>&rsquo;, this
+     forces &lsquo;<code class=css>isolate</code>&rsquo; to be added to the
+     computed value of &lsquo;<a href="#unicode-bidi0"><code
+     class=property>unicode-bidi</code></a>&rsquo;. Layout of text is exactly
+     as for &lsquo;<a href="#rotate-right"><code
+     class=css>rotate-right</code></a>&rsquo; except that the entire text
+     content and baseline table of the element is mirrored: each box of the
+     inline is mirrored around a vertical axis such that its content box does
+     not move. (However the contents of atomic inlines are not mirrored; only
+     their alignment is changed.) Similarly, if a child of the element has a
+     &lsquo;<a href="#text-orientation0"><code
+     class=property>text-orientation</code></a>&rsquo; value other than
+     &lsquo;<a href="#rotate-left"><code
+     class=css>rotate-left</code></a>&rsquo;, an analogous transformation is
+     applied.
+
+   <dt><dfn id=rotate-normal>rotate-normal</dfn>
+
+   <dd>
+    <p>This value is equivalent to &lsquo;<a href="#rotate-right"><code
+     class=css>rotate-right</code></a>&rsquo; in &lsquo;<code
+     class=css>vertical-rl</code>&rsquo; writing mode and equivalent to
+     &lsquo;<a href="#rotate-left"><code
+     class=css>rotate-left</code></a>&rsquo; in &lsquo;<code
+     class=css>vertical-lr</code>&rsquo; writing mode. It can be useful when
+     setting horizontal script text vertically in a primarily horizontal-only
+     document.
+
+   <dt><dfn id=auto>auto</dfn>
+
+   <dd>
+    <p><a href="#SVG11" rel=biblioentry>[SVG11]<!--{{!SVG11}}--></a> defines
+     &lsquo;<code class=property>glyph-orientation-vertical</code>&rsquo; and
+     &lsquo;<code class=property>glyph-orientation-horizontal</code>&rsquo;
+     properties that were intended to control text orientation. These
+     properties are <em>deprecated</em> and do not apply to non-SVG elements.
+     If an implementation supports these properties, the &lsquo;<a
+     href="#auto"><code class=css>auto</code></a>&rsquo; value when set on
+     SVG elements indicates that the SVG &lsquo;<code
+     class=property>glyph-orientation-vertical</code>&rsquo; and &lsquo;<code
+     class=property>glyph-orientation-horizontal</code>&rsquo; behavior
+     control the layout of text. Such UAs must set &lsquo;<code
+     class=css>text-orientation: auto</code>&rsquo; on all <a
+     href="http://www.w3.org/TR/SVG/intro.html#TermTextContentElement">SVG
+     text content elements</a> in their default UA style sheet for SVG.
+
+    <p>In all other contexts, and for implementations that do not support the
+     glyph orientation properties, the &lsquo;<a href="#auto"><code
+     class=css>auto</code></a>&rsquo; behavior is the same as for &lsquo;<a
+     href="#vertical-right"><code class=css>vertical-right</code></a>&rsquo;.
+     
+  </dl>
+
+  <div class=figure> <img alt="text-orientation: vertical-right, upright,
+   rotate-left, and rotate-right" height=100 src=text-orientation.png
+   width=192>
+   <p class=caption>text-orientation: vertical-right, upright, rotate-left,
+    and rotate-right</p>
+  </div>
+
+  <div class=example>
+   <p>In the following example, the root element of a horizontal-only
+    document is set to use &lsquo;<a href="#rotate-normal"><code
+    class=css>rotate-normal</code></a>&rsquo;. In the rest of the document,
+    the author can just set &lsquo;<a href="#writing-mode1"><code
+    class=property>writing-mode</code></a>&rsquo; without worrying about
+    whether the text is &lsquo;<code class=css>vertical-rl</code>&rsquo; or
+    &lsquo;<code class=css>vertical-lr</code>&rsquo;.
+
+   <pre>
+      :root { text-orientation: rotate-normal; }
+      caption { caption-side: left; writing-mode: vertical-lr; }
+      thead th { writing-mode: vertical-lr; }
+      h1.banner { position: absolute; top: 0; right: 0; writing-mode: vertical-rl; }
+    </pre>
+  </div>
+
+  <p>In vertical typographic modes, any grapheme clusters belonging to a
+   vertical script <em>must</em> be set using its base character's intrinsic
+   orientation. (See <a href="#script-orientations">Appendix A</a>) Grapheme
+   clusters belonging to horizontal-only scripts must set sideways (for
+   &lsquo;<a href="#vertical-right"><code
+   class=css>vertical-right</code></a>&rsquo;) or set upright (for &lsquo;<a
+   href="#upright"><code class=css>upright</code></a>&rsquo;) depending on
+   the &lsquo;<a href="#text-orientation0"><code
+   class=property>text-orientation</code></a>&rsquo; property.
+
+  <p>The orientation of characters belonging to the Common, Inherited, and
+   Unknown script categories may be UA- or font-dependent in vertical
+   typographic modes. The Unicode East Asian Width property <a href="#UAX11"
+   rel=biblioentry>[UAX11]<!--{{!UAX11}}--></a> can be used to distinguish
+   whether a character is typically be set upright or sideways in &lsquo;<a
+   href="#vertical-right"><code class=css>vertical-right</code></a>&rsquo;:
+   characters classified as fullwidth (F) or wide (W) are typically set
+   upright (using vertical font settings), whereas characters classified as
+   neutral (N), narrow (Na) or halfwidth (H) are typically set sideways
+   (using horizontal font settings).
+
+  <p>If the font and font system support mixed-orientation typesetting, the
+   UA should rely on that feature to set &lsquo;<a
+   href="#vertical-right"><code class=css>vertical-right</code></a>&rsquo;
+   text. Similarly if the font and font system support upright typesetting
+   then the UA should rely on that feature to set &lsquo;<a
+   href="#upright"><code class=css>upright</code></a>&rsquo; text.
+
+  <p>If the UA needs to synthesize such features (e.g. if an OpenType font
+   has only the <code>vert</code> but not the <code>vrt2</code> feature),
+   then it should:
+
+  <ul>
+   <li>for &lsquo;<a href="#vertical-right"><code
+    class=css>vertical-right</code></a>&rsquo;, set all characters with an
+    East Asian Width of F or W upright (i.e. translated, using vertical font
+    settings if available), and set sideways the rest (i.e. rotated, using
+    horizontal font settings).
+
+   <li>for &lsquo;<a href="#upright"><code
+    class=css>upright</code></a>&rsquo;, set all characters belonging to the
+    Mongolian and Phags Pa scripts sideways, and set upright the rest.
+  </ul>
+
+  <p class=issue>Need to define handling of EAW Ambiguous (A) symbols and
+   punctuation.
+
+  <p class=issue> Link to definition of grapheme clusters in <a href="#UAX29"
+   rel=biblioentry>[UAX29]<!--{{!UAX29}}--></a>.
+
+  <p class=issue>Add appendix that describes interaction with OpenType
+   features and font layout?
+
+  <h2 id=abstract-box><span class=secno>6. </span> Abstract Box Terminology</h2>
+
+  <p><a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#CSS21" rel="biblioentry">[CSS21]
+      <!--{{!CSS21}}-->
+  </a> defines
+   the box layout model of CSS in detail. However, it only defines the box
+   model for the ‘<code class="css">horizontal-tb</code>’ writing
+   mode. CSS box layout in writing modes other than ‘<code class="css">horizontal-tb</code>’ is analogous to the box layout
+   defined in CSS2.1 if directions and dimensions are abstracted and remapped
+   appropriately. This section defines abstract directional and dimensional
+   terms and their mappings in order to define box layout for other writing
+   modes, and to provide terminology for future specs to define their layout
+   concepts abstactly.
+  <p><a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#CSS21" rel="biblioentry">[CSS21]
+     <!--{{!CSS21}}-->
+   </a> 詳細的定義CSS的框佈局模型，然而，他只定義了框模型的 ‘<code class="css">horizontal-tb</code>’ 書寫模式。以方向和維度是抽象且重新映射的為前提下，CSS 框佈局書寫模式除了 ‘<code class="css">horizontal-tb</code>’ 外皆相似於 CSS2.1 的框佈局定義。 </p>
+   <h3 id="abstract-dimensions"><span class="secno">6.1. </span> Logical
+     Dimensions</h3>
+   <dl>
+     <dt><dfn id="block-flow-dimension">block flow dimension</dfn> </dt>
+     <dd>The dimension perpendicular to the flow of text with in a line, the <i>vertical dimension</i> in horizontal writing modes, and the <i>horizontal dimension</i> in vertical writing modes. </dd>
+     <dd> 這部份替其他框佈局的書寫模式定義了抽象方向、維度的條件和他們的映射，且提供術語為未來的規格去定義他們的抽象佈局概念 </dd>
+     <dt><dfn id="inline-dimension">inline dimension</dfn> </dt>
+     <dd>The dimension parallel to the flow of text within a line, i.e. the <i>horizontal dimension</i> in horizontal writing modes, and the <i>vertical dimension</i> in vertical writing modes. </dd>
+     <dd>維度垂直於流動的文字，成一條線，<i>垂直維度</i>在水平書寫模式內和<i>水平維度</i>在垂直書寫模式內。 </dd>
+     <dt><dfn id="inline-axis">inline-axis</dfn> </dt>
+     <dd>The axis in the block flow dimension, i.e. the <i>vertical axis</i> in
+       horizontal writing modes and the <i>horizontal axis</i> in vertical
+       writing modes. </dd>
+     <dd>中軸線在維塊流內，亦即<i>垂直軸</i>在水平書寫模式內和<i>水平軸</i>在垂直書寫模式內。 </dd>
+     <dt><dfn id="block-axis">block-axis</dfn> </dt>
+     <dd>The axis in the inline dimension, i.e. the <i>horizontal axis</i> in
+       horizontal writing modes and the <i>vertical axis</i> in vertical writing
+       modes. </dd>
+     <dd>中軸線內嵌的維度，即在<i>水平軸</i>的水平寫作模式和<i>垂直軸</i>的垂直書寫模式。 </dd>
+     <dt><dfn id="length">length</dfn> or <dfn id="logical-height">logical
+       height</dfn> </dt>
+     <dt><dfn id="length">長度</dfn>或<dfn id="logical-height">邏輯高度</dfn> </dt>
+     <dt></dt>
+     <dd>A measurement in the block flow dimension: refers to the physical
+       height (vertical dimension) in horizontal writing modes, and to the
+       physical width (horizontal dimension) in vertical writing modes. </dd>
+     <dd>在區塊流量維度裡的一個測量方法：指的是物理高度 (垂直方向) 的水平寫作模式，和以物理寬度 (水平方向) 的垂直書寫模式。 </dd>
+     <dt><dfn id="measure">measure</dfn> or <dfn id="logical-width">logical
+       width</dfn> </dt>
+     <dt><dfn id="measure">測量</dfn>或<dfn id="logical-width">邏輯寬度</dfn> </dt>
+     <dt></dt>
+     <dd>A measurement in the inline dimension: refers to the physical width
+       (horizontal dimension) in horizontal writing modes, and to the physical
+       height (vertical dimension) in vertical writing modes. (The term <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#measure"><i>measure</i></a> derives from its <a href="http://en.wikipedia.org/wiki/Measure_%28typography%29">use in
+         typography</a>.) </dd>
+     <dd>在內嵌維度的一個測量方法：指的是物理寬度 (水平方向) 的水平寫作模式，並以物理高度 (垂直高度) 的垂直書寫模式。 {<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#measure"><i>測量</i></a>一詞來自其<a href="http://en.wikipedia.org/wiki/Measure_%28typography%29">排版</a>的使用。) </dd>
+   </dl>
+   <h3 id="abstract-directions"><span class="secno">6.2. </span> Abstract and
+     Physical Directions</h3>
+   <p>The terms <dfn id="left">left</dfn>, <dfn id="right">right</dfn>, <dfn id="top">top</dfn>, and <dfn id="bottom">bottom</dfn> are always interpreted
+     physically, i.e. with respect to the page independent of writing mode. Two
+     abstract mappings are possible for these directions: line-relative and
+     flow-relative, which are defined below. </p>
+   <p><dfn id="left">左</dfn>、<dfn id="right">右</dfn>、<dfn id="top">上</dfn>、<dfn id="bottom">下</dfn>，這些名詞通常是被直翻的。即是有關 writing mode 的獨立頁。兩個抽象的製圖對這些方面是合適的: 線的相對與浮動的相對，在下面一段將會幫此兩者定義。 </p>
+   <p>Although they derive from the behavior of text, these directional terms
+     exist even for boxes that do not contain any line boxes: they are
+     calculated directly from the values of the ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#writing-mode1"><code class="property">writing-mode</code></a>’,
+     ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#text-orientation0"><code class="property">text-orientation</code></a>’, and ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’
+     properties. </p>
+   <p>儘管他們從正文的變化所導出，這些具有方向性的專有名詞甚至存在著空間所無法包含的任何一個線空間: 他們是從‘書寫方式’、‘正文取向’與‘方向’，這些特性的價值所直接計算而導出的。 </p>
+   <h3 id="line-directions"><span class="secno">6.3. </span> Line-relative
+     Directions</h3>
+   <p>Although the block flow direction given by ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#writing-mode1"><code class="property">writing-mode</code></a>’
+     determines whether the line is oriented horizontally or vertically, it
+     doesn't say anything about how the contents within the line are arranged. </p>
+   <p>雖然 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#writing-mode1"><code class="property">writing-mode</code></a>’ 的線會以水平的方向或垂直的方向，可是不會說這條線是怎麼被整理的。 </p>
+   <p>The <dfn id="line-orientation">line orientation</dfn> determines which
+     side of the line is the "top" and thus which sides are <dfn id="under">under</dfn> (ascender side) and <dfn id="over">over</dfn> (descender side) the line. This determines the interpretation of alignment
+     in the transverse dimension of the line. It also determines the default <i>glyph orientation</i> for scripts in a non-native orientation. These
+     characteristics are controlled by the ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#text-orientation0"><code class="property">text-orientation</code></a>’ property. </p>
+   <p>這條線的定位確認哪一條線是在上面或哪條線是在下面。藉由這個可以決定這一條線的大小。這也決定了字型方向的腳本在非原生的方向。這些特性是被 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#text-orientation0"><code class="property">text-orientation</code></a>’ 的屬性所控制。 </p>
+   <p>In addition to its <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#over"><i>over</i></a> and <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#under"><i>under</i></a> sides, a line box, even a
+     vertically-oriented one, also has a "left" and "right" side, which we will
+     call the <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#line-left"><i>line-left</i></a> and <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#line-right"><i>line-right</i></a> sides of the box (as distinct
+     from the physical left and physical right sides of the box). The <dfn id="line-left">line-left</dfn> edge of a box is nominally the edge from
+     which <abbr title="left-to-right">LTR</abbr> text would start. The <dfn id="line-right">line-right</dfn> edge of a box is nominally the edge from
+     which <abbr title="right-to-left">RTL</abbr> text would start. Depending on
+     the ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#writing-mode1"><code class="property">writing-mode</code></a>’ and ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#text-orientation0"><code class="property">text-orientation</code></a>’ properties, the
+     line-left side of a box could be on the left, top, or bottom. </p>
+   <p> 除了它的 <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#over"><i>over</i></a> 跟 <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#under"><i>under</i></a> 的方向，即使是垂直的，也是會有左邊與右邊，命名為 <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#line-left"><i>line-left</i></a> 跟 <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#line-right"><i>line-right</i></a> (如空間的左側與右側的差別)，行左的空間邊緣通常會從 <abbr title="left-to-right">LTR</abbr> 的文字邊開始，行右的空間邊緣通常是會從 <abbr title="right-to-left">RTL</abbr> 的文字邊緣開始。根據 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#writing-mode1"><code class="property">writing-mode</code></a>’ 和 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#text-orientation0"><code class="property">text-orientation</code></a>’，行左的空間可以設在左邊、上面或下面。 </p>
+   <div class="figure">
+     <object class="landscape" data="http://cc.cse.tw/bryanyuan2/diagrams/line-orient-up.svg" type="image/svg+xml">
+     </object>
+     <p class="caption">Line orientation compass</p>
+   </div>
+   <div class="figurepair">
+     <div class="figure">
+       <object class="portrait" data="http://cc.cse.tw/bryanyuan2/diagrams/line-orient-right.svg" type="image/svg+xml">
+       </object>
+       <p class="caption">Typical orientation in vertical</p>
+     </div>
+     <div class="figure">
+       <object class="portrait" data="http://cc.cse.tw/bryanyuan2/diagrams/line-orient-left.svg" type="image/svg+xml">
+       </object>
+       <p class="caption">Line orientation with ‘<code class="css">text-orientation: rotate-left</code>’</p>
+     </div>
+   </div>
+   <p class="note">Note also that while the <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#over"><i>over</i></a> and <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#under"><i>under</i></a> directions often map to the same
+     directions as <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#before">before</a> and <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#after">after</a> respectively, this mapping is reversed for some combinations of ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#writing-mode1"><code class="property">writing-mode</code></a>’
+     and ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#text-orientation0"><code class="property">text-orientation</code></a>’. </p>
+   <p> 還要注意的是 <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#over"><i>over</i></a> 和 <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#under"><i>under</i></a> 常前後分別映射到相同方向，這種映射與 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#writing-mode1"><code class="property">writing-mode</code></a>’ 和 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#text-orientation0"><code class="property">text-orientation</code></a>’ 的一些組合相反。 </p>
+  <h3 id=logical-directions><span class=secno>6.4. </span> Flow-relative
+ Directions</h3>
+
+  <p>The <dfn id=flow-relative-directions>flow-relative directions</dfn> are
+   <a href="#before">before</a>, <a href="#after">after</a>, <a
+   href="#start">start</a>, and <a href="#end">end</a>. In an <abbr
+   title=left-to-right>LTR</abbr> &lsquo;<code
+   class=css>horizontal-tb</code>&rsquo; writing mode, they correspond to the
+   top, bottom, left, and right directions, respectively.
+
+  <p>The <dfn id=before>before</dfn> edge of a box is nominally the edge that
+   comes earlier in the block progression, as determined by the &lsquo;<a
+   href="#writing-mode1"><code class=property>writing-mode</code></a>&rsquo;
+   poperty. Similarly the <dfn id=after>after</dfn> edge is the edge that
+   comes later in the progression.
+
+  <p>The <dfn id=start>start</dfn> edge of a box is nominally the edge from
+   which text of its inline base direction will start. For boxes with a used
+   &lsquo;<a href="#direction0"><code
+   class=property>direction</code></a>&rsquo; value of &lsquo;<code
+   class=css>ltr</code>&rsquo;, this means the <a
+   href="#line-left"><i>line-left</i></a> edge. For boxes with a used
+   &lsquo;<a href="#direction0"><code
+   class=property>direction</code></a>&rsquo; value of &lsquo;<code
+   class=css>rtl</code>&rsquo;, this means the <a
+   href="#line-right"><i>line-right</i></a> edge. The edge opposite the start
+   edge is the <dfn id=end>end</dfn> edge.
+
+  <p class=note>Note that while determining the <a
+   href="#before"><i>before</i></a> and <a href="#after"><i>after</i></a>
+   edges of a box depends only on the &lsquo;<a href="#writing-mode1"><code
+   class=property>writing-mode</code></a>&rsquo; property, determining the <a
+   href="#start"><i>start</i></a> and <a href="#end"><i>end</i></a> edges of
+   a box depends not only on the &lsquo;<a href="#writing-mode1"><code
+   class=property>writing-mode</code></a>&rsquo; property but also the
+   &lsquo;<a href="#direction0"><code
+   class=property>direction</code></a>&rsquo; <em>and</em> &lsquo;<a
+   href="#text-orientation0"><code
+   class=property>text-orientation</code></a>&rsquo; properties.
+
+  <div class=example>
+   <p>An English (LTR-TB) block:</p>
+
+   <pre class=ascii-art>
+                  &lt;----- width / measure  -----&gt;
+
+                             top side/
+                            before side
+                  +------------------------------+                  A
+      left side/  |   ---inline direction --->   |  right side/     |
+      start side  |  |                           |  end side        |
+                  |  | block      * horizontal * |                height/
+                  |  | direction  *writing mode* |                length
+                  |  V                           |                  |
+                  +------------------------------+                  V
+                             bottom side/
+                              after side
+    </pre>
+  </div>
+
+  <div class=example>
+   <p>A vertical Japanese block (TTB-RL):</p>
+
+   <pre class=ascii-art>
+                  &lt;----- width / length ------&gt;
+
+                             top side/
+                            start side
+                  +------------------------------+                  A
+      left side/  |    &lt;---block direction---    |  right side/     |
+      after side  |                           |  |  before side     |
+                  |  *  vertical  *     inline|  |                height/
+                  |  *writing mode*  direction|  |                measure
+                  |                           V  |                  |
+                  +------------------------------+                  V
+                            bottom side/
+                             end side
+    </pre>
+  </div>
+
+  <h3 id=logical-to-physical><span class=secno>6.5. </span>
+   Abstract-to-Physical Mappings</h3>
+
+  <p>The following table summarizes the abstract-to-physical mappings:
+
+  <table class=data>
+   <caption>Abstract-Physical Mapping</caption>
+
+   <thead>
+    <tr>
+     <th scope=row>&lsquo;<a href="#writing-mode1"><code
+      class=property>writing-mode</code></a>&rsquo;
+
+     <th colspan=2>&lsquo;<code class=css>horizontal-tb</code>&rsquo;
+
+     <th colspan=4>&lsquo;<code class=css>vertical-rl</code>&rsquo;
+
+     <th colspan=4>&lsquo;<code class=css>vertical-lr</code>&rsquo;
+
+    <tr>
+     <th scope=row>&lsquo;<a href="#text-orientation0"><code
+      class=property>text-orientation</code></a>&rsquo;
+
+     <th colspan=2>&mdash;
+
+     <th colspan=2>&lsquo;<a href="#rotate-left"><code
+      class=css>rotate-left</code></a>&rsquo;
+
+     <th colspan=2><abbr title="vertical-right, upright,
+      rotate-right">*right</abbr>
+
+     <th colspan=2>&lsquo;<a href="#rotate-left"><code
+      class=css>rotate-left</code></a>&rsquo;
+
+     <th colspan=2><abbr title="vertical-right, upright,
+      rotate-right">*right</abbr>
+
+    <tr>
+     <th scope=row>&lsquo;<a href="#direction0"><code
+      class=property>direction</code></a>&rsquo;
+
+     <th>&lsquo;<code class=css>ltr</code>&rsquo;
+
+     <th>&lsquo;<code class=css>rtl</code>&rsquo;
+
+     <th>&lsquo;<code class=css>ltr</code>&rsquo;
+
+     <th>&lsquo;<code class=css>rtl</code>&rsquo;
+
+     <th>&lsquo;<code class=css>ltr</code>&rsquo;
+
+     <th>&lsquo;<code class=css>rtl</code>&rsquo;
+
+     <th>&lsquo;<code class=css>ltr</code>&rsquo;
+
+     <th>&lsquo;<code class=css>rtl</code>&rsquo;
+
+     <th>&lsquo;<code class=css>ltr</code>&rsquo;
+
+     <th>&lsquo;<code class=css>rtl</code>&rsquo;
+
+   <tbody>
+    <tr>
+     <th scope=row>length
+
+     <td colspan=2>height
+
+     <td colspan=8>width
+
+    <tr>
+     <th scope=row>measure
+
+     <td colspan=2>width
+
+     <td colspan=8>height
+
+    <tr>
+     <th scope=row>before
+
+     <td colspan=2>top
+
+     <td colspan=4>right
+
+     <td colspan=4>left
+
+    <tr>
+     <th scope=row>after
+
+     <td colspan=2>bottom
+
+     <td colspan=4>left
+
+     <td colspan=4>right
+
+    <tr>
+     <th scope=row>start
+
+     <td>left
+
+     <td>right
+
+     <td>bottom
+
+     <td>top
+
+     <td>top
+
+     <td>bottom
+
+     <td>bottom
+
+     <td>top
+
+     <td>top
+
+     <td>bottom
+
+    <tr>
+     <th scope=row>end
+
+     <td>right
+
+     <td>left
+
+     <td>top
+
+     <td>bottom
+
+     <td>bottom
+
+     <td>top
+
+     <td>top
+
+     <td>bottom
+
+     <td>bottom
+
+     <td>top
+
+   <tbody>
+    <tr>
+     <th scope=row>over
+
+     <td colspan=2>top
+
+     <td colspan=2>left
+
+     <td colspan=2>right
+
+     <td colspan=2>left
+
+     <td colspan=2>right
+
+    <tr>
+     <th scope=row>under
+
+     <td colspan=2>bottom
+
+     <td colspan=2>right
+
+     <td colspan=2>left
+
+     <td colspan=2>right
+
+     <td colspan=2>left
+
+    <tr>
+     <th scope=row>line-left
+
+     <td colspan=2>left
+
+     <td colspan=2>bottom
+
+     <td colspan=2>top
+
+     <td colspan=2>bottom
+
+     <td colspan=2>top
+
+    <tr>
+     <th scope=row>line-right
+
+     <td colspan=2>right
+
+     <td colspan=2>top
+
+     <td colspan=2>bottom
+
+     <td colspan=2>top
+
+     <td colspan=2>bottom
+  </table>
+
+  <h2 id=abstract-layout><span class=secno>7. </span> Abstract Box Layout</h2>
+
+  <h2>7. 盒式版面配置摘要</h2>
+  <h3 id="vertical-layout2"><span class="secno">7.1. </span> Principles of Layout
+    in Vertical Writing Modes</h3>
+  <h3>7.1. 直排書寫模式的排版原則</h3>
+  <p>CSS box layout in vertical writing modes is analogous to layout in the
+    horizontal writing modes, following the principles outlined below: </p>
+  <p>在直排書寫模式中CSS box layout(盒式版面配置)與橫排書寫模式是相類似的，按照以下原則：</p>
+  <p>Layout calculation rules (such as those in CSS2.1, Section 10.3) that
+    apply to the horizontal dimension in horizontal writing modes instead
+    apply to the vertical dimension in vertical writing modes. Likewise,
+    layout calculation rules (such as those in CSS2.1, Section 10.6) that
+    apply to the vertical dimension in horizontal writing modes instead apply
+    to the horizontal dimension in vertical writing modes. Thus: </p>
+  <p>排版(Layout)計算規則(例如CSS2.1,第10.3節) 適用於水平書寫模式中的水平維度 也適用於直排書寫模式的垂直維度。同樣地，排版(Layout)計算規則(例如CSS2.1,第10.6節)適用於水平書寫模式中的垂直維度 也適用於直排書寫模式的水平維度。因此：</p>
+  <ul>
+    <li>
+      <p>Layout rules that refer to the width use the height instead, and vice
+        versa. </p>
+    </li>
+    <li>排版規則中所指的寬度就要用長度取代，反之亦然。</li>
+    <li>
+      <p>Layout rules that refer to the ‘<code class="css">*-left</code>’ and ‘<code class="css">*-right</code>’ box properties (border, margin, padding)
+        use ‘<code class="css">*-top</code>’ and ‘<code class="css">*-bottom</code>’ instead, and vice versa. </p>
+    </li>
+    <li>排版規則中所指的 &lsquo;*-left&rsquo; and &lsquo;*-right&rsquo;的盒式屬性(邊界、頁邊、填充) 就要用&lsquo;*-top&rsquo; and &lsquo;*-bottom&rsquo;取代，反之亦然。
+      <p class="note">Which side of the box the property applies to doesn't
+        change: only which values are inputs to which layout calculations
+        changes. The ‘<code class="property">margin-left</code>’
+        property still affects the lefthand margin, for example; however in a
+        ‘<code class="css">vertical-rl</code>’ writing mode it takes
+        part in margin collapsing in place of ‘<code class="property">margin-bottom</code>’.</p>
+    </li>
+    <li>屬性所套用於盒式版面的任一邊並不會有所改變: 唯一改變的是進行排版(Layout)計算時所輸入的那些值。正如&lsquo;margin-left&rsquo; 屬性仍然影響盒子左邊的邊界；但是當在  &lsquo;vertical-rl&rsquo;寫作模式下，此屬性將會取代&lsquo;margin-bottom&rsquo;對邊界壓縮(崩潰?)造成影響。 </li>
+    <li>
+      <p>Layout rules that depend on the ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#direction0"><code class="property">direction</code></a>’ property to choose between
+        left and right (e.g. overflow, overconstraint resolution, the initial
+        value for ‘<code class="property">text-align</code>’, table
+        column ordering) are abstracted to the <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#start">start</a> and <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#end">end</a> sides and applied appropriately. </p>
+    </li>
+    <li>排版規則依據&quot;方向&quot;屬性去選左邊或右邊(例如：overflow,  overconstraint resolution, the initial value for &lsquo;text-align&rsquo;,  table column orderin)通常被摘錄為開始端或結束端並且適當應用。</li>
+  </ul>
+  <p>For features such as text alignment, floating, and list marker
+    positioning, that primarily reference the left or right sides of the line
+    box or its longitudinal parallels and therefore have no top or bottom
+    equivalent, the <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#line-left">line left</a> and <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#line-right">line right</a> sides are used as the reference for the
+    left and right sides respectively. </p>
+  <p>對於文本對齊、浮動，並列出標記定位等功能，主要參考的左邊或右邊的縱線箱或直向平行之處，因此沒有相等的頂部或底部。<a href="http://dev.w3.org/csswg/css3-writing-modes/#line-left" target="_blank">line left</a>端與<a href="http://dev.w3.org/csswg/css3-writing-modes/#line-right" target="_blank">line right</a>端通常分別用來作為左右兩端的參考。</p>
+  <p>Likewise for features such as underlining, overlining, and baseline
+    alignment (the unfortunately-named ‘<code class="property">vertical-align</code>’), that primarily reference the
+    top or bottom sides of the linebox or its transversal parallels and
+    therefore have no left or right equivalent, the <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#over">over</a> and <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#under">under</a> sides are used as the reference for the top
+    and bottom sides respectively. </p>
+  <p>同樣地，underlining，overlining和基線對齊(the  unfortunately-named &lsquo;vertical-align&rsquo;)這些功能主要是參照頂端或底端的linebox或者橫向平行，因此沒有相等的左端或右端，<a href="http://dev.w3.org/csswg/css3-writing-modes/#over" target="_blank">over</a>端與<a href="http://dev.w3.org/csswg/css3-writing-modes/#under" target="_blank">under</a>端通常分別用來作為頂端與底端的參考。</p>
+  <p>The details of these mappings are provided below. </p>
+  <p>對照的細節提供如下：</p>
+  <h3 id="dimension-mapping"><span class="secno">7.2. </span> Dimensional Mapping</h3>
+  <h3>7.2. 維度對照</h3>
+  <!--
+  <p>Properties that are named in terms of the x and y axes are
+    logical with respect to the block flow direction rather than absolute
+    with respect to the page. Specifically:
+
+  <ul>
+    <li>The &lsquo;<code class=css>repeat-x</code>&rsquo; keyword of &lsquo;<code class=property>background-repeat</code>&rsquo; tiles in the
+      inline dimension of the element, which is not necessarily the
+      horizontal dimension. [[!CSS21]] [[!CSS3BG]]
+    <li>The &lsquo;<code class=css>repeat-y</code>&rsquo; keyword of &lsquo;<code class=property>background-repeat</code>&rsquo; tiles in the
+      block flow dimension of the element, whcih is not necessarily
+      the vertical dimenion. [[!CSS21]] [[!CSS3BG]]
+    <li>The &lsquo;<code class=property>overflow-x</code>&rsquo; property controls overflow in the inline
+      dimension of the element. [[!CSS3UI]]
+    <li>The &lsquo;<code class=property>overflow-y</code>&rsquo; property controls overflow in the block
+      flow dimension of the element. [[!CSS3UI]]
+  </ul>
+-->
+  <p>Certain properties behave logically as follows: </p>
+  <p>某些屬性的表現邏輯如下：</p>
+  <ul>
+    <li>The first and second values of the ‘<code class="property">border-spacing</code>’ property represent spacing
+      between columns and rows respectively, not necessarily the horizontal and
+      vertical spacing respectively. <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#CSS21" rel="biblioentry">[CSS21]
+        <!--{{!CSS21}}-->
+      </a> </li>
+    <li>The ‘<code class="property">line-height</code>’ property
+      always refers to the logical height. <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#CSS21" rel="biblioentry">[CSS21]
+        <!--{{!CSS21}}-->
+      </a> </li>
+    <li>border-spacing’ 屬性的第一個及第二個值分別代表表示行與列之間的間距，不一定是分別表示水平和垂直間距</li>
+    <li>line-height’屬性通常是指邏輯(絕對?)高度。</li>
+  </ul>
+  <p>The height properties (‘<code class="property">height</code>’,
+    ‘<code class="property">min-height</code>’, and ‘<code class="property">max-height</code>’) refer to the physical height, and
+    the width properties (‘<code class="property">width</code>’,
+    ‘<code class="property">min-width</code>’, and ‘<code class="property">max-width</code>’) refer to the physical width.
+    However, the rules used to calculate box dimensions and positions are
+    logical. </p>
+  <p>高度這個屬性(height&rsquo;, &lsquo;min-height&rsquo;, and &lsquo;max-height&rsquo;)&nbsp;指的是實際高度，且寬恕度屬性 (&lsquo;width&rsquo;, &lsquo;min-width&rsquo;, and &lsquo;max-width&rsquo;)指的是實際寬度。不過，這些規則用來計算維度與位置通常是合乎邏輯的。</p>
+  <p>For example, the calculation rules in <a href="http://www.w3.org/TR/CSS21/visudet.html#Computing_widths_and_margins">CSS2.1
+    Section 10.3</a> are used for the inline dimension measurements: they
+    apply to the measure (which could be either the physical width or physical
+    height) and to the the start and end margins, padding, and border.
+    Likewise the calculation rules in <a href="http://www.w3.org/TR/CSS21/visudet.html#Computing_heights_and_margins">CSS2.1
+      Section 10.6</a> are used in the block dimension: they apply to the length
+    and to the before and after margins, padding, and border. <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#CSS21" rel="biblioentry">[CSS21]
+      <!--{{!CSS21}}-->
+    </a> </p>
+<p>例如，在 <a href="http://www.w3.org/TR/CSS21/visudet.html#Computing_widths_and_margins" target="_blank">CSS2.1&nbsp; 10.3</a>節的計算規則通常用來計算內聯維度的計算：他們通常適用於測量(可以是物理的寬度或物理的高度) 以及在開始和結束邊界，填充和邊界。 <br>
+    還有，計算規則 </p>
+  <a href="http://www.w3.org/TR/CSS21/visudet.html#Computing_heights_and_margins" target="_blank">CSS2.1 Section 10.6</a>通常用於block維度<p>As a corollary, percentages on the margin and padding properties, which
+   are always calculated with respect to the containing block width in
+   CSS2.1, are calculated with respect to the <a
+   href="#measure"><em>measure</em></a> of the containing block in CSS3.
+
+<h3 id=orthogonal-flows><span class=secno>7.3. </span> Orthogonal Flows</h3>
+
+  <p>When an element has a different ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#writing-mode1"><code class="property">writing-mode</code></a>’ from its containing block
+  two cases are possible:  
+  <p>當一個element在其containing block中有不同的‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#writing-mode1"><code class="property">writing-mode</code></a>’ 時，會有兩種情況：</p>
+  <ul>
+    <li>The two writing modes are parallel to each other. (For example,
+      ‘<code class="css">vertical-rl</code>’ and ‘<code class="css">vertical-lr</code>’). </li>
+    <li>The two writing modes are perpendicular to each other. (For example,
+      ‘<code class="css">horizontal-tb</code>’ and ‘<code class="css">vertical-rl</code>’). </li>
+  </ul>
+  <ul>
+    <li>兩種writing-mode相互平行(例如：
+      ‘<code class="css">vertical-rl</code>’ 、 ‘<code class="css">vertical-lr</code>’). </li>
+    <li>兩種writing-mode相互垂直(例如：
+      ‘<code class="css">horizontal-tb</code>’ 、 ‘<code class="css">vertical-rl</code>’). </li>
+  </ul>
+  <p>To handle the second case, for the purposes of calculating the layout of
+    the box, the physical dimensions corresponding to the length and measure
+    of the containing block are determined using the writing mode of the box
+    under consideration, not the writing mode of the element associated with
+    the containing block.</p>
+  <p>在處理第二種情況時，為了要計算box的layout，physical dimensions對應到containing block的length和measure ，目前正在考慮是否確定使用 box的writing mode, 而非containing block中element的writing mode。</p>
+  <p>For example, if a vertical block is placed inside a horizontal block,
+    then when calculating the physical height (which is the measure) of the
+    child block the physical height of the parent block is used to calculate
+    the measure of the child's containing block, even though the physical
+    height is the length, not the measure, of the parent block.</p>
+  <p>舉個例子，如果一個垂直的block被放置在一個水平的block裡時，當在計算子block的physical height(which is measure)時，父block的physical height就會被用來計算子containing block的measure，即使父block的physical height 是length而非measure。</p>
+  <p>It is common in CSS for a containing block to have a defined measure,
+    but not a defined length. This typically happens in CSS2.1 when a
+    containing block has an ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#auto"><code class="css">auto</code></a>’ height, for example: its width is given
+    by the calculations in <a href="http://www.w3.org/TR/CSS21/visudet.html#blockwidth">10.3.3</a>, but
+    its length depends on its contents. In such cases the <i>available
+      measure</i> is defined, but the <i>available length</i> is infinite.</p>
+  <p>在CSS中，containing block有明確的 measure卻沒有明確的length是很常見的。這常在CSS 2.1版中，設定containing block有
+    ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#auto"><code class="css">auto</code></a>’ 屬性的高度時發生。例如：寬度由<a href="http://www.w3.org/TR/CSS21/visudet.html#blockwidth">10.3.3</a> 計算而來，但length卻由他的內容而定。在此情況下，<i>available measure</i>被定義，但可用的<i>available length</i>是無窮大。</p>
+  <p>Orthogonal flows allow the opposite to happen: for the <i>available
+    length</i> to be defined, but the <i>available measure</i> to be infinite.
+    In such cases a percentage of the containing block measure cannot be
+    defined, and thus the initial containing block's measure is used to
+    calculate such percentages instead. <span class="issue">Is this definition
+      of percentages a good idea?</span></p>
+  <p>Orthogonal flows則允許相反的事情發生: <i>available length</i>被定義，但<i>available measure</i>卻是無窮大。
+    在此情況下containing block measure的百分比不能被定義，而且containing block measure的初始值被用來代替其百分比。<span class="issue">這個百分比的定義是個好主意嗎?</span></p>
+  <h4 id="orthogonal-auto"><span class="secno">7.3.1. </span> Auto-sizing in
+    Orthogonal Flows</h4>
+  <h4 id="orthogonal-auto"><span class="secno">7.3.1. </span> Auto-sizing in
+    Orthogonal Flows</h4>
+  <p>If the computed measure of an element establishing an orthogonal flow is
+    ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#auto"><code class="css">auto</code></a>’, then the
+    used measure is calculated as the shrink-to-fit (‘<code class="css">fit-content</code>’) value using the initial containing
+    block's measure as the available size in the shrink-to-fit algorithm.</p>
+  <p>如果在element中，被計算過後measure的orthogonal flow屬性是
+    ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#auto"><code class="css">auto</code></a>’這個measure將會被縮放到最適合大小(‘<code class="css">fit-content</code>’) 
+    。此演算法使用了containing block的初始measure來當作available size</p>
+  <p class="note">As with other shrink-to-fit boxes, the width and height
+    calculations occur before auto margin calculations in the inline
+    dimension, and therefore a block box establishing an orthogonal flow, once
+    sized, can be aligned or centered within its containing block just like
+    other block-level elements by using auto margins.</p>
+  <p class="note">至於其他縮放到最適合大小的box，會在計算inline dimension裡屬性為auto的margin之前計算其長和寬，因此一旦指定好大小，block box就會建立起一個orthogonal flow，可以在其containing block裡被對齊或置中，如同其他使用auto屬性的margins的block-level elements一樣。</p>
+  <h4 id="orthogonal-multicol"><span class="secno">7.3.2. </span> Multi-column
+    Layout in Orthogonal Flows</h4>
+  <h4 id="orthogonal-multicol"><span class="secno">7.3.2. </span> Multi-column
+    Layout in Orthogonal Flows</h4>
+  <p>If the UA supports CSS Multi-column Layout <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#CSS3COL" rel="biblioentry">[CSS3COL]
+    <!--{{!CSS3COL}}-->
+    </a>, then for the case where
+    the available length is defined but the available measure is infinite and
+    the element's measure is unconstrained (is not fixed and has no maximum):</p>
+  <p>如果UA支援CSS 多欄位Layout <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#CSS3COL" rel="biblioentry">[CSS3COL]
+    <!--{{!CSS3COL}}-->
+  </a>，the available length是被定義的但the available measure是無窮大，而且element的measure是沒有被限制的(不固定且沒有最大值)：</p>
+  <ul>
+    <li>If ‘<code class="property">column-count</code>’ and
+      ‘<code class="property">column-width</code>’ are both ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#auto"><code class="css">auto</code></a>’, then the
+      ‘<code class="property">column-count</code>’ is assumed to be
+      ‘<code class="css">1</code>’, and the following rules apply.</li>
+    <li>If the ‘<code class="property">column-count</code>’ is not
+      ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#auto"><code class="css">auto</code></a>’, the column
+      width is calculated as if the element's containing block were the initial
+      containing block, and the rest of the layout is calculated as described
+      below for non-‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#auto"><code class="css">auto</code></a>’ column widths.</li>
+    <li>If the ‘<code class="property">column-width</code>’ is not
+      ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#auto"><code class="css">auto</code></a>’, the
+      available length is used to calculate the column length by subtracting
+      out the element's margins, borders, and padding in the block dimension
+      and flooring the result at zero. The used column-count and the used
+      measure of the element then follow from filling the resulting columns
+      with the element's content. </li>
+  </ul>
+  <ul>
+    <li>如果‘<code class="property">column-count</code>’和
+      ‘<code class="property">column-width</code>’的值都是‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#auto"><code class="css">auto</code></a>’，‘<code class="property">column-count</code>’就會假定為
+      ‘<code class="css">1</code>’，而接下來的規則也適用此規則。</li>
+    <li>如果‘<code class="property">column-count</code>’的值不是
+      ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#auto"><code class="css">auto</code></a>’，欄位的寬度將會被計算，就像element的containing block一樣，是初始的containing block。而其餘的Layout將會依接下來的「欄位寬度非‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#auto"><code class="css">auto</code></a>’屬性值」的條目來討論</li>
+    <li>※	如果‘<code class="property">column-width</code>’屬性值不是
+      ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#auto"><code class="css">auto</code></a>’其available length則是減去element在block dimension的margins、borders、padding且把結果歸零，來計算column length。這邊使用的column-count 和element的measure會用element的內文來填滿結果columns </li>
+  </ul>
+  <h4 id="orthogonal-pagination"><span class="secno">7.3.3. </span> Paginating
+    Orthogonal Flows</h4>
+  <h4 id="orthogonal-pagination"><span class="secno">7.3.3. </span> Paginating
+    Orthogonal Flows</h4>
+  <p><em>This section is informative.</em></p>
+  <p><em>此區塊是informative的</em></p>
+  <p>With regards to pagination, the rules in CSS2.1 still hold in vertical
+    writing modes and orthogonal flows: page break opportunities do not occur
+    inside line boxes, only between them. Note that UAs that support <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#CSS3COL" rel="biblioentry">[CSS3COL]
+      <!--{{!CSS3COL}}-->
+      </a> may break
+    between columns, however. <span class="issue">Does CSS3 Multicol specify
+      this <a href="http://lists.w3.org/Archives/Public/www-style/2007Nov/0112.html">as
+        requested</a>?</span></p>
+  <p>關於pagination，在CSS 2.1版的規則中，仍然hold in 垂直writing modes和orthogonal flows：在line boxes裡不會有分頁的機會，只有在他們兩者之間才會。注意到，支援 <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#CSS3COL" rel="biblioentry">[CSS3COL]
+    <!--{{!CSS3COL}}-->
+  </a> 的UAs可能會在columns間分頁，然而，<span class="issue">CSS3的多欄排列是否有按照 <a href="http://lists.w3.org/Archives/Public/www-style/2007Nov/0112.html">此處</a>的要求呢?</span></p>
+  <p>Note that if content spills outside the pagination stream established by
+    the root element, the UA is not required to print such content. Authors
+    wishing to mix writing modes with long streams of text are thus encouraged
+    to use CSS columns to keep all content flowing in the document's
+    pagination direction.</p>
+  <p>注意到，如果內容落在根element建立的pagination串流之外，US不被要求輸出那些內容，那些希望用內文的長串流來混合writing modes的作者們被鼓勵使用CSS columns來保存那些在文件的pagination方向流動的全部內容。</p>
+  <div class="note">
+    <p>In other words, if your document would require two scrollbars on the
+      screen it probably won't all print. Fix your layout, e.g. by using <a href="http://www.w3.org/TR/css3-multicol/">columns</a> so that it all
+      scrolls (and therefore paginates) in one direction if you want to make
+      sure it'll all print. T-shaped documents tend not to print well. </p>
+  </div>
+  <div class="note">
+    <p>換句話說，如果你的文件在畫面上需要兩個scrollbars，該文件可能不會全部輸出。為了解決你的layout，例如：使用 <a href="http://www.w3.org/TR/css3-multicol/">columns</a> ，文件就只會在一個方向上捲動，以確保文件會被全部輸出。T-shaped類型的文件可能不會輸出得很好。</p>
+  </div>
+<div class=note></div>
+
+  <h3 id=logical-direction-layout><span class=secno>7.4. </span>
+   Flow-Relative Mappings</h3>
+
+  <p>Flow-relative directions are calculated with respect to the writing mode
+   of the element and used to abstract layout related to padding and border
+   properties. For example, if an element had computed values of &lsquo;<code
+   class=css>direction: ltr; writing-mode: vertical-lr; text-orientation:
+   vertical-right</code>&rsquo;, &lsquo;<code
+   class=property>padding-top</code>&rsquo; would give its start padding, and
+   &lsquo;<code class=property>padding-left</code>&rsquo; would give its
+   before padding.
+
+  <p>Flow-relative directions are calculated with respect to the writing mode
+   of the <em>parent</em> of the element and used to abstract layout related
+   to the margin properties and the &lsquo;<a href="#top"><code
+   class=property>top</code></a>&rsquo;, &lsquo;<a href="#bottom"><code
+   class=property>bottom</code></a>&rsquo;, &lsquo;<a href="#left"><code
+   class=property>left</code></a>&rsquo;, and &lsquo;<a href="#right"><code
+   class=property>right</code></a>&rsquo; properties. (For the root element,
+   which has no parent, the values of the writing mode of the element is used
+   instead.)
+
+  <p>The <a
+   href="http://www.w3.org/TR/CSS21/box.html#collapsing-margins">margin
+   collapsing rules</a> apply exactly with the <em>before margin</em>
+   substituted for the top margin and the <em>after margin</em> substituted
+   for the bottom margin. Similarly the padding and border on the same side
+   as the before margin is substituted for the top padding and border, and
+   the padding and border on the same side as the after margin for the bottom
+   padding and border. Note this means only before and after margins ever
+   collapse.
+
+  <p class=note>The parent element is used instead of the containing block,
+   because the benefit of using the containing block is very rare, but the
+   cost to implement it is rather high for implementations that do
+   abstract-physical mapping at cascade time.
+
+  <p>The start and end directions are also used for inline layout as follows:
+   
+
+  <ul>
+   <li>The initial value of the &lsquo;<code
+    class=property>text-align</code>&rsquo; property aligns to the start edge
+    of the line box.
+
+   <li>The &lsquo;<code class=property>text-indent</code>&rsquo; property
+    indents from the start edge of the line box.
+  </ul>
+
+  <h3 id=line-mappings><span class=secno>7.5. </span> Line-Relative Mappings</h3>
+
+  <p>The <dfn id=line-relative-directions>line-relative directions</dfn> are
+   <a href="#over">over</a>, <a href="#under">under</a>, <a
+   href="#line-left">line-left</a>, and <a href="#line-right">line-right</a>.
+   In an <abbr title=left-to-right>LTR</abbr> &lsquo;<code
+   class=css>horizontal-tb</code>&rsquo; writing mode, they correspond to the
+   top, bottom, left, and right directions, respectively.
+
+  <p>The line-right and line-left directions are calculated with respect to
+   the writing mode of the element and used to interpret the &lsquo;<a
+   href="#left"><code class=css>left</code></a>&rsquo; and &lsquo;<a
+   href="#right"><code class=css>right</code></a>&rsquo; values of the
+   following properties:
+
+  <ul>
+   <li>the &lsquo;<code class=property>text-align</code>&rsquo; property <a
+    href="#CSS21" rel=biblioentry>[CSS21]<!--{{!CSS21}}--></a>
+  </ul>
+
+  <p>The line-right and line-left directions are calculated with respect to
+   the writing mode of the <em>containing block</em> of the element and used
+   to interpret the &lsquo;<a href="#left"><code
+   class=css>left</code></a>&rsquo; and &lsquo;<a href="#right"><code
+   class=css>right</code></a>&rsquo; values of the following properties:
+
+  <ul>
+   <li>the &lsquo;<code class=property>float</code>&rsquo; property <a
+    href="#CSS21" rel=biblioentry>[CSS21]<!--{{!CSS21}}--></a>
+
+   <li>the &lsquo;<code class=property>clear</code>&rsquo; property <a
+    href="#CSS21" rel=biblioentry>[CSS21]<!--{{!CSS21}}--></a>
+  </ul>
+
+  <p>The over and under directions are calculated with respect to the writing
+   mode of the element and used to define the interpretation of the "top"
+   (over edge) and "bottom" (under edge) of the line box as follows:
+
+  <ul>
+   <li>For the &lsquo;<code class=property>vertical-align</code>&rsquo;
+    property, the "top" of the line box is the over edge; the "bottom" of the
+    line box is the under edge. Positive length and percentage values shift
+    the baseline towards the over edge. <a href="#CSS21"
+    rel=biblioentry>[CSS21]<!--{{!CSS21}}--></a>
+
+   <li>For the &lsquo;<code class=property>text-decoration</code>&rsquo;
+    property, the underline is drawn on the under side of the text; the
+    overline is drawn on the over side of the text. <a href="#CSS21"
+    rel=biblioentry>[CSS21]<!--{{!CSS21}}--></a> <span class=note>Note that
+    the CSS Text Module defines this in more detail and provides additional
+    controls for controlling the position of underlines and overlines. <a
+    href="#CSS3TEXT" rel=biblioentry>[CSS3TEXT]<!--{{CSS3TEXT}}--></a></span>
+    
+  </ul>
+
+  <h3 id=physical-only><span class=secno>7.6. </span> Purely Physical
+   Mappings</h3>
+
+  <p>The following values are purely physical in their definitions and do not
+   respond to changes in writing mode:
+
+  <ul>
+   <li>all values of &lsquo;<code
+    class=property>background-repeat</code>&rsquo;
+
+   <li>the &lsquo;<code class=css>rect()</code>&rsquo; notation of the
+    &lsquo;<code class=property>clip</code>&rsquo; property <a href="#CSS21"
+    rel=biblioentry>[CSS21]<!--{{!CSS21}}--></a>
+
+   <li>the offsets of the &lsquo;<code
+    class=property>box-shadow</code>&rsquo; and &lsquo;<code
+    class=property>text-shadow</code>&rsquo; properties
+  </ul>
+
+  <h3 id=caption-side><span class=secno>7.7. </span> Table Caption Mappings:
+   the &lsquo;<code class=property>caption-side</code>&rsquo; property</h3>
+
+  <h3 id="caption-side2"><span class="secno">7.7. </span> 表格標題方位對應:
+    the ‘<code class="property">caption-side</code>’ 屬性</h3>
+  <p>This module introduces two new values to the ‘<code class="property">caption-side</code>’ property: ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#before"><code class="css">before</code></a>’ and ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#after"><code class="css">after</code></a>’, which position the
+    caption before and after the table box, respectively. For tables with
+    ‘<code class="css">horizontal-tb</code>’ writing mode, they are
+    equivalent to the existing ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#top"><code class="css">top</code></a>’ and ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#bottom"><code class="css">bottom</code></a>’ values, respectively. <a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#CSS21" rel="biblioentry">[CSS21]
+      <!--{{!CSS21}}-->
+    </a> </p>
+  <p>這個模組將為 ‘<code class="property">caption-side</code>’ 屬性介紹兩個新的值:’<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#before"><code class="css">before</code></a>’和‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#after"><code class="css">after</code></a>’屬性,它可以將表格分別地放置於前和後。對於’<code class="css">horizontal-tb</code>’書寫模式而言，它們分別地有’<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#top"><code class="css">top</code></a>’和’<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#bottom"><code class="css">bottom</code></a>’值。<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#CSS21" rel="biblioentry">[CSS21]
+    <!--{{!CSS21}}-->
+  </a> </p>
+  <p>Implementations that support the ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#top"><code class="css">top</code></a>’ and ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#bottom"><code class="css">bottom</code></a>’ values of the ‘<code class="property">caption-side</code>’ property but do not support side
+    captions (i.e. ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#left"><code class="css">left</code></a>’ and ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#right"><code class="css">right</code></a>’ captions in horizontal writing modes)
+    must treat ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#top"><code class="css">top</code></a>’ and
+    ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#bottom"><code class="css">bottom</code></a>’ as
+    ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#before"><code class="css">before</code></a>’, when
+    the table is in a vertical writing mode. </p>
+  <p> 在垂直書寫模式下，支援’caption-side’屬性值 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#top"><code class="css">top</code></a>’ 和 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#bottom"><code class="css">bottom</code></a>’，但不支援側邊方位(?)(也就是在水平書寫模式下的 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#left"><code class="css">left</code></a>’ 和 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#right"><code class="css">right</code></a>’ 方位)的，必須將 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#top"><code class="css">top</code></a>’ 和 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#before"><code class="css">before</code></a>’ 屬性都視為 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#before"><code class="css">before</code></a>’。 </p>
+  <p>For implementations that do support side captions (i.e. the ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#left"><code class="css">left</code></a>’ and ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#right"><code class="css">right</code></a>’ values), this module
+    also introduces the ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#start"><code class="css">start</code></a>’ and ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#end"><code class="css">end</code></a>’ values, which behave similarly and which
+    position the caption on the start and end sides of the table box,
+    calculated with respect to the writing mode of the table element. For such
+    implementations, the ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#top"><code class="css">top</code></a>’ and ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#bottom"><code class="css">bottom</code></a>’ values must place the caption on the
+    top and bottom sides of the table box, respectively. </p>
+  <p> 對於支援側邊方位(?)(也就是 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#left"><code class="css">left</code></a>’ 和 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#right"><code class="css">right</code></a>’ )，這個模組也有了 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#start"><code class="css">start</code></a>’ 和 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#end"><code class="css">end</code></a>’ 值，它們將標題方位置於表格的開始和結束的地方，分別根據表格元素的書寫模式而定。對於這種實作方式，‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#top"><code class="css">top</code></a>’ 和 ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#bottom"><code class="css">bottom</code></a>’ 值必須將標題方位分別置於表格的上方和下方。 </p>
+  <!--
+	<h3 id="html-attributes">HTML Attributes</h3>
+
+  <p>This section defines the mapping of HTML presentational attributes
+    in CSS. This section is normative for user agents supporting HTML
+    in addition to the &lsquo;<code class=property>writing-mode</code>&rsquo; property. [[!HTML40]] [[!HTML5]]
+
+  <h4 id="width-height-attributes">The <code>width</code> and <code>height</code> attributes</h4>
+
+  <p>The HTML <code>width</code> and <code>height</code> attributes refer
+    to the physical width and height for elements that that are replaced,
+    i.e.
+    <code>&lt;applet&gt;</code>,
+    <code>&lt;embed&gt;</code>,
+    <code>&lt;iframe&gt;</code>,
+    <code>&lt;img&gt;</code>,
+    <code>&lt;object&gt;</code>,
+    <code>&lt;canvas&gt;</code>,
+    and
+    <code>&lt;video&gt;</code>
+
+  <p>Form elements elements contain text, therefore their contents should be
+    affected by writing mode, in which case these attributes refer to the
+    <em>logical</em> width and height. The UA may, however, choose not
+    to rotate nor flip these elements in vertical writing modes if it is not
+    capable, and in that case, these attributes remain physical.</p>
+    <p class="issue">when not to rotate form elements/MathML,
+      should treat them as images (always upright)
+      or to force writing-mode to always calculate to horizontal-tb?</p>
+
+  <p>On table-related elements (<code>&lt;table&gt;</code>, <code>&lt;colgroup&gt;</code>,
+    <code>&lt;col&gt;</code>, <code>&lt;tr&gt;</code>, <code>&lt;th&gt;</code>,
+    <code>&lt;td&gt;</code>) the <code>width</code> and <code>height</code>
+    attributes are always logical.
+
+  <p>The <code>size</code> attribute of the <code>&lt;hr&gt;</code> element
+    is also logical (refers to the logical height).
+
+  <h4 id="alignment-attributes">Alignment, Float and Clear Attributes</h4>
+
+  <p>The following attributes behave the same way as their corresponding
+    CSS properties:</p>
+
+  <ul>
+    <li><code>align</code> as &lsquo;<code class=property>float</code>&rsquo; or &lsquo;<code class=property>text-align</code>&rsquo;</li>
+    <li><code>clear</code> as &lsquo;<code class=property>clear</code>&rsquo;</li>
+    <li><code>valign</code> as &lsquo;<code class=property>vertical-align</code>&rsquo;</li>
+  </ul>
+
+  <h4 id="spacing-attributes">Spacing Attributes</h4>
+
+  <p>The following attributes are logical and, as margins, are logical
+    with respect to the writing mode of the <em>parent</em> element.</p>
+
+  <ul>
+    <li><code>hspace</code> as start and end margins</li>
+    <li><code>vspace</code> as before and after margins</li>
+    <li>marginwidth</li>
+    <li>marginheight</li>
+  </ul>
+-->
+  <h2 id="text-combine"><span class="secno">8. </span>Glyph Composition: the
+    ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#text-combine0"><code class="property">text-combine</code></a>’ property</h2>
+  <h2 id="text-combine"><span class="secno">8. </span>字形組成: the
+    ‘<a href="http://cc.cse.tw/bryanyuan2/css3-writing-modes.cht.html#text-combine0"><code class="property">text-combine</code></a>’ 屬性</h2>
+  <table class="propdef">
+    <tbody>
+      <tr>
+        <th>Name: </th>
+        <td><dfn id="text-combine0">text-combine</dfn></td>
+      </tr>
+      <tr>
+        <th>Value: </th>
+        <td>none | [ horizontal &lt;number&gt;? ] </td>
+      </tr>
+      <tr>
+        <th>Initial: </th>
+        <td>none </td>
+      </tr>
+      <tr>
+        <th>Applies to: </th>
+        <td>non-replaced inline elements </td>
+      </tr>
+      <tr>
+        <th>Inherited: </th>
+        <td>no </td>
+      </tr>
+      <tr>
+        <th>Percentages: </th>
+        <td>N/A </td>
+      </tr>
+      <tr>
+        <th>Media: </th>
+        <td>visual </td>
+      </tr>
+      <tr>
+        <th>Computed&nbsp;value: </th>
+        <td>specified value </td>
+      </tr>
+    </tbody>
+  </table>
+  <!---->
+  <table class="propdef">
+    <tbody>
+      <tr>
+        <th>名稱: </th>
+        <td><dfn id="text-combine0">text-combine</dfn></td>
+      </tr>
+      <tr>
+        <th>值: </th>
+        <td>none | [ horizontal &lt;number&gt;? ] </td>
+      </tr>
+      <tr>
+        <th>初始值: </th>
+        <td>none </td>
+      </tr>
+      <tr>
+        <th>適用於: </th>
+        <td>non-replaced inline elements </td>
+      </tr>
+      <tr>
+        <th>繼承於: </th>
+        <td>no </td>
+      </tr>
+      <tr>
+        <th>百分比: </th>
+        <td>N/A </td>
+      </tr>
+      <tr>
+        <th>媒體(?): </th>
+        <td>visual </td>
+      </tr>
+      <tr>
+        <th>計算後的值(?): </th>
+        <td>specified value </td>
+      </tr>
+    </tbody>
+  </table>
+  <!---->
+  <p>This property allows the combination of multiple characters into the
+    space of a single character. For text layout purposes, e.g. bidi ordering,
+    line-breaking, emphasis marks, text-decoration, etc. the resulting
+    composition is treated as a single glyph representing the Object
+    Replacement Character U+FFFC. Values have the following meanings: </p>
+  <p> 這個屬性將許多字元合併成單一的字元。對於文字排版，例如: bidi ordering, line-breaking, emphasis marks, text-decoration等,最後的組成字元被視為單一的字形，它代表著Object Replacement Character U+FFFC。它具有以下的值： </p>
+  <dl>
+    <dt><dfn id="none" title="text-combine:none">none</dfn> </dt>
+    <dd>No special processing. </dd>
+    <dd>無特別的處理。 </dd>
+    <dt><dfn id="horizontal" title="text-combine:horizontal">horizontal</dfn> </dt>
+    <dd>
+      <p>In vertical writing mode, attempt to display the text contents of the
+        element horizontally within the vertical line box, ideally within the
+        space of one ideographic character (1em square). </p>
+      <p> 在垂直書寫模式下，試著將文字內容水平地展現在垂直的直線裡，它適當地在一個
+        ideographic character(?)空間裡面 (1em 寬)。 </p>
+      <p>The glyphs are stacked horizontally (similar to the contents of an
+        inline-box with a horizontal writing mode and a line-height of 1em) and
+        the baseline of the resulting composition chosen such that it is
+        centered between the content edges of its parent inline box. </p>
+      <p> 這些字形被水平放置(類似一個水平書寫模式的inline-box和一個1em的
+        line-height)  而且最後組合而成之字元的底線會被置中於父元素內容的邊界。 </p>
+      <p>The UA should determine how to render the composed glyph into the
+        space. If the UA has compressed glyphs available for the contents of the
+        element, then it may use those glyphs to attempt sizing the contents to
+        1em square. For example, a two digit number may use halfwidth or
+        proportional glyphs, a three-digit number may use 1/3-em glyphs (if
+        available, else halfwidth glyphs), etc. </p>
+      <p> UA 必須決定如何給予組合而成的字形空間。如果 UA 已經將元素的內容壓縮成字形， 然後它將使用這些字元去嘗試調整內容的大小到 1em 寬。舉例來說，一個兩位數的數字可能使用一半寬比例的字形，一個三位數的數字可能使用 1/3em 的字形 (如果可以的話，否則就用一半寬的字形) 等。 </p>
+      <p>The UA may scale the contents to fit instead, or in addition to the
+        method above. </p>
+      <p> 除了以上的方法之外，UA可能延展去切合字形的內容。 </p>
+      <p>In horizontal mode, or if the number of grapheme clusters in the
+        element exceeds the number specified (if any), this value is equivalent
+        to ‘<code class="css">none</code>’. </p>
+      <p>在水平書寫模式下，或者是如果字形叢集的數目超過了特定的數目，這個值 (horizontal) 就等於 ‘<code class="css">none</code>’。 </p>
+    </dd>
+  </dl>
+  <div class="example">
+    <p>In East Asian documents, the  effect is often used to display Latin-based
+      strings such as components of a date or letters of an initialism, always
+      in a horizontal writing mode regardless of the writing mode of the line:</p>
+    <p> 在東亞國家的文件裡，‘<code class="css">text-combine:
+      horizontal</code>’ 的效果通常被使用來展現基於拉丁語的字串，例如一個日期的組成或一個縮寫的字母，但不論書寫的模式為何，總是以水平書寫模式呈現： </p>
+    <div class="figure">
+      <p><img alt="Diagram of tate-chu-yoko, showing the two digits of a date
+     set halfwidth side-by-side in a vertical column of text" class="example" src="./CSS Writing Modes Module Level 3(工讀生)_files/tate-chu-yoko.png"> </p>
+      <p class="caption">Example of horizontal-in-vertical <i lang="ja">tate-chu-yoko</i></p>
+    </div>
+    <p>The figure is the result of the rules</p>
+    <pre><!-- -->.num { text-combine: horizontal; }
+    </pre>
+    <p>and the following markup:</p>
+    <pre><!-- -->平成&lt;span class="num"&gt;20&lt;/span&gt;年
+<!-- -->&lt;span class="num"&gt;4&lt;/span&gt;月
+<!-- -->&lt;span class="num"&gt;16&lt;/span&gt;日に
+    </pre>
+    <p>In Japanese, this effect is known as <i lang="ja">tate-chu-yoko</i>. </p>
+    <p>在日本語裡，這個效果被稱為<i lang="ja">tate-chu-yoko</i>。 </p>
+  </div>
+  <p class="issue">Some people have requested a way to have numbers
+    automatically text-combine'd. Maybe a text-auto-combine property? Note
+    that whether a number should be tate-chu-yoko'd is often
+    context-sensitive: this would give very weird results when applied to an
+    arbitrary paragraph. </p>
+<p class="issue"> 有些人或許會要求讓文字自動組合的方式。也許是 text-auto-combine 屬性(?)注意無論一個數字應該是 tate-chu-yoko 或不是通常都是 context-sensitive(?) 的：這個將會造成在任意的段落裡產生相當奇怪的結果。 </p><h2 class=no-num id=acknowledgements>Acknowledgements</h2>
+
+  <p>John Daggett, Martin Heijdra, Paul Nelson, Michel Suignard, Steve Zilles
+
+  <h2 class=no-num id=bidi-html>Appendix B: Bidi Rules for HTML</h2>
+
+  <p>The style sheet rules that would achieve the bidi behaviors specified in
+   <a href="#HTML401" rel=biblioentry>[HTML401]<!--{{HTML401}}--></a> for the
+   HTML Strict doctype are given below:
+
+  <pre>
+/* HTML dir attribute creates an embedding */
+*[dir="ltr"]    { direction: ltr; unicode-bidi: embed; }
+*[dir="rtl"]    { direction: rtl; unicode-bidi: embed; }
+
+/* BDO element creates an override */
+bdo[dir="ltr"]  { direction: ltr; unicode-bidi: bidi-override; }
+bdo[dir="rtl"]  { direction: rtl; unicode-bidi: bidi-override; }
+
+/* HTML4.01:8.2.6 - preserve bidi behavior if 'display' is changed */
+html, body,
+div, address, blockquote, p,
+ul, ol, li, dl, dt, dd,
+fieldset, form,
+h1, h2, h3, h4, h5, h6,
+{ unicode-bidi: isolate; }
+  </pre>
+
+  <h2 class=no-num id=script-orientations>Appendix A: Script Orientations</h2>
+
+  <p>This appendix gives the orientational properties of vertical scripts in
+   <a href="#UNICODE" rel=biblioentry>[UNICODE]<!--{{!UNICODE}}--></a>. Any
+   script not listed explicitly is assumed to be <i>horizontal-only</i>.
+
+  <table>
+   <thead>
+    <tr>
+     <th>Script Name
+
+     <th>Transform
+
+   <tbody>
+    <tr>
+     <td>Bopomofo
+
+     <td>translate
+
+    <tr>
+     <td>Hiragana
+
+     <td>translate
+
+    <tr>
+     <td>Katakana
+
+     <td>translate
+
+    <tr>
+     <td>Han
+
+     <td>translate
+
+    <tr>
+     <td>Hangul
+
+     <td>translate
+
+    <tr>
+     <td>Mongolian
+
+     <td>rotate
+
+    <tr>
+     <td>Phags Pa
+
+     <td>rotate <span class=issue>?</span>
+
+    <tr>
+     <td>Yi
+
+     <td>translate
+  </table>
+
+  <p>For the purposes of this specification, all fullwidth characters <a
+   href="#UAX11" rel=biblioentry>[UAX11]<!--{{!UAX11}}--></a> are treated as
+   belonging to a vertical script with a translate bi-orientational
+   transform.</p>
+  <!--
+  <p class="note">Ogham is also a rotating bi-orientational script, but
+    because it is a bottom-to-top script for the purposes of this
+    specification it is treated as left-to-right horizontal. A future
+    version of CSS may define proper handling of bottom-to-top scripts.
+    Authors can work around this lack of support with the &lsquo;<code class=css>rotate-left</code>&rsquo;
+    value of &lsquo;<code class=property>text-orientation</code>&rsquo;.
+-->
+
+  <h2 class=no-num id=appendix-b-references>Appendix B: References</h2>
+
+  <h3 class=no-num id=normative-references>Normative references</h3>
+  <!--begin-normative-->
+  <!-- Sorted by label -->
+
+  <dl class=bibliography>
+   <dt style="display: none"><!-- keeps the doc valid if the DL is empty -->
+    <!---->
+
+   <dt id=CSS21>[CSS21]
+
+   <dd>Bert Bos; et al. <a
+    href="http://www.w3.org/TR/2010/WD-CSS2-20101207"><cite>Cascading Style
+    Sheets Level 2 Revision 1 (CSS 2.1) Specification.</cite></a> 7 December
+    2010. W3C Working Draft. (Work in progress.) URL: <a
+    href="http://www.w3.org/TR/2010/WD-CSS2-20101207">http://www.w3.org/TR/2010/WD-CSS2-20101207</a>
+    </dd>
+   <!---->
+
+   <dt id=CSS3COL>[CSS3COL]
+
+   <dd>H&#229;kon Wium Lie. <a
+    href="http://www.w3.org/TR/2009/CR-css3-multicol-20091217"><cite>CSS
+    Multi-column Layout Module.</cite></a> 17 December 2009. W3C Candidate
+    Recommendation. (Work in progress.) URL: <a
+    href="http://www.w3.org/TR/2009/CR-css3-multicol-20091217">http://www.w3.org/TR/2009/CR-css3-multicol-20091217</a>
+    </dd>
+   <!---->
+
+   <dt id=SVG11>[SVG11]
+
+   <dd>Erik Dahlstr&#246;m; et al. <a
+    href="http://www.w3.org/TR/2010/WD-SVG11-20100622"><cite>Scalable Vector
+    Graphics (SVG) 1.1 (Second Edition).</cite></a> 22 June 2010. W3C Working
+    Draft. (Work in progress.) URL: <a
+    href="http://www.w3.org/TR/2010/WD-SVG11-20100622">http://www.w3.org/TR/2010/WD-SVG11-20100622</a>
+    </dd>
+   <!---->
+
+   <dt id=UAX11>[UAX11]
+
+   <dd>Asmus Freytag. <a
+    href="http://www.unicode.org/unicode/reports/tr11/tr11-8.html"><cite>East
+    Asian Width.</cite></a> 23 March 2001. Unicode Standard Annex #11. URL:
+    <a
+    href="http://www.unicode.org/unicode/reports/tr11/tr11-8.html">http://www.unicode.org/unicode/reports/tr11/tr11-8.html</a>
+    </dd>
+   <!---->
+
+   <dt id=UAX29>[UAX29]
+
+   <dd>Mark Davis. <a
+    href="http://www.unicode.org/reports/tr29/tr29-17.html"><cite>Unicode
+    Text Segmentation.</cite></a> 8 October 2010. Unicode Standard Annex #29.
+    URL: <a
+    href="http://www.unicode.org/reports/tr29/tr29-17.html">http://www.unicode.org/reports/tr29/tr29-17.html</a>
+    </dd>
+   <!---->
+
+   <dt id=UNICODE>[UNICODE]
+
+   <dd>The Unicode Consortium. <a
+    href="http://www.unicode.org/unicode/standard/versions/enumeratedversions.html"><cite>The
+    Unicode Standard.</cite></a> 2003. Defined by: The Unicode Standard,
+    Version 4.0 (Boston, MA, Addison-Wesley, ISBN 0-321-18578-1), as updated
+    from time to time by the publication of new versions URL: <a
+    href="http://www.unicode.org/unicode/standard/versions/enumeratedversions.html">http://www.unicode.org/unicode/standard/versions/enumeratedversions.html</a>
+    </dd>
+   <!---->
+  </dl>
+  <!--end-normative-->
+
+  <h3 class=no-num id=other-references>Other references</h3>
+  <!--begin-informative-->
+  <!-- Sorted by label -->
+
+  <dl class=bibliography>
+   <dt style="display: none"><!-- keeps the doc valid if the DL is empty -->
+    <!---->
+
+   <dt id=CSS3PAGE>[CSS3PAGE]
+
+   <dd>Melinda Grant; H&#229;kon Wium Lie. <a
+    href="http://www.w3.org/TR/2006/WD-css3-page-20061010"><cite>CSS3 Module:
+    Paged Media.</cite></a> 10 October 2006. W3C Working Draft. (Work in
+    progress.) URL: <a
+    href="http://www.w3.org/TR/2006/WD-css3-page-20061010">http://www.w3.org/TR/2006/WD-css3-page-20061010</a>
+    </dd>
+   <!---->
+
+   <dt id=CSS3TEXT>[CSS3TEXT]
+
+   <dd>Elika J. Etemad; Koji Ishii; Shinyu Murakami. <a
+    href="http://www.w3.org/TR/2011/WD-css3-text-20110215"><cite>CSS Text
+    Level 3.</cite></a> 15 February 2011. W3C Working Draft. (Work in
+    progress.) URL: <a
+    href="http://www.w3.org/TR/2011/WD-css3-text-20110215">http://www.w3.org/TR/2011/WD-css3-text-20110215</a>
+    </dd>
+   <!---->
+
+   <dt id=HTML401>[HTML401]
+
+   <dd>David Raggett; Ian Jacobs; Arnaud Le Hors. <a
+    href="http://www.w3.org/TR/1999/REC-html401-19991224"><cite>HTML 4.01
+    Specification.</cite></a> 24 December 1999. W3C Recommendation. URL: <a
+    href="http://www.w3.org/TR/1999/REC-html401-19991224">http://www.w3.org/TR/1999/REC-html401-19991224</a>
+    </dd>
+   <!---->
+
+   <dt id=UTN22>[UTN22]
+
+   <dd>Elika J. Etemad. <a href="http://unicode.org/notes/tn22/"><cite>Robust
+    Vertical Text Layout.</cite></a> 25 April 2005. Unicode Technical Note
+    #22. URL: <a
+    href="http://unicode.org/notes/tn22/">http://unicode.org/notes/tn22/</a></dd>
+   <!---->
+  </dl>
+  <!--end-informative-->
+  <!-- Add property index and alphabetic index? -->
